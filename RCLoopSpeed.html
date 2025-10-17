@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RC Loop Speed</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .card h3 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card h3 .icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-success {
+            background: var(--success);
+        }
+        
+        .btn-success:hover {
+            background: #219653;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 500;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .connection-status {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .connected {
+            background: var(--success);
+        }
+        
+        .disconnected {
+            background: var(--danger);
+        }
+        
+        .connecting {
+            background: var(--warning);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .main-action {
+            margin: 40px 0;
+        }
+        
+        .parsed-data-container {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .parsed-data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .parsed-data-table th, .parsed-data-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        .parsed-data-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+        
+        .parsed-data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+            transition: color 0.3s;
+        }
+        
+        .close-btn:hover {
+            color: #333;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        input:focus {
+            border-color: #2575fc;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(37, 117, 252, 0.2);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .edit-btn {
+            background-color: #ffa502;
+            color: white;
+        }
+        
+        .edit-btn:hover {
+            background-color: #e59400;
+        }
+        
+        .delete-btn {
+            background-color: #ff4757;
+            color: white;
+        }
+        
+        .delete-btn:hover {
+            background-color: #ff3742;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #777;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .user-form {
+            display: grid;
+            grid-template-columns: 1fr 2fr auto;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: end;
+        }
+        
+        @media (max-width: 600px) {
+            .user-form {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .user-form button {
+            white-space: nowrap;
+        }
+        
+        .id-input {
+            max-width: 100px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            header {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h3>🔵 RC Loop Speed</h3>
+        </header>
+        
+        <div class="card">
+            <h3><span class="icon">📊</span> Connection Status</h3>
+            <div class="connection-status">
+                <div id="status-indicator" class="status-indicator disconnected"></div>
+                <span id="connection-text">Disconnected</span>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-success" id="connect-btn">
+                    🔌 Connect
+                </button>
+            </div>
+            
+            <div id="device-info" class="status info">
+                Waiting for device connection...
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">🔍</span> Lap Times</h3>
+           
+            <div class="parsed-data-container">
+                <table class="parsed-data-table" id="parsed-data-table">
+                    <thead>
+                        <tr>
+                            <th>No.</th>                           
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Seconds</th>
+                            <th>Current Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="parsed-data-body">
+                        <!-- Parsed data will be displayed here -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-warning" id="clear-parsed-btn">🗑️ Clear Lap Records</button>
+            </div>
+        </div>
+        
+        <div class="status" id="statusMessage"></div>
+        
+        <div class="main-action">
+            <button class="btn" id="editUsersBtn">Edit Users</button>
+        </div>
+        
+        <div class="card">
+            <div id="status-area"></div>
+        </div>
+    </div>
+    
+    <!-- Edit Users Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">User Management</h3>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="user-form">
+                    <div class="form-group">
+                        <label for="userId">ID</label>
+                        <input type="number" id="userId" class="id-input" placeholder="ID" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="userName">Name</label>
+                        <input type="text" id="userName" placeholder="Enter username">
+                    </div>
+                    <button class="btn btn-success" id="addUserBtn">Add User</button>
+                </div>
+                
+                <div id="usersTableContainer">
+                    <table id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- User data will be dynamically generated here -->
+                        </tbody>
+                    </table>
+                    <div id="emptyState" class="empty-state">
+                        <i>📊</i>
+                        <p>No user data available, please add users</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="closeModalBtn">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const connectBtn = document.getElementById('connect-btn');
+        const clearParsedBtn = document.getElementById('clear-parsed-btn');
+        const editUsersBtn = document.getElementById('editUsersBtn');
+        const statusMessage = document.getElementById('statusMessage');
+        
+        // Modal related elements
+        const editModal = document.getElementById('editModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const closeModalBtn2 = document.getElementById('closeModalBtn');
+        const usersTableBody = document.getElementById('usersTableBody');
+        const emptyState = document.getElementById('emptyState');
+        const userIdInput = document.getElementById('userId');
+        const userNameInput = document.getElementById('userName');
+        const addUserBtn = document.getElementById('addUserBtn');
+        
+        const deviceInfo = document.getElementById('device-info');
+        const statusArea = document.getElementById('status-area');
+        const statusIndicator = document.getElementById('status-indicator');
+        const connectionText = document.getElementById('connection-text');
+        const parsedDataBody = document.getElementById('parsed-data-body');
+
+        // Global variables
+        let port = null;
+        let reader = null;
+        let isConnected = false;
+        let isReading = false;
+        let dataLists = [];
+        let dataHistory = [];
+        let lastTimestamp = null;
+        
+        // Database variables
+        let db;
+        const dbName = "UserDB";
+        const dbVersion = 1;
+        const storeName = "users";
+        
+        // Timer variables
+        let intervalId = null;
+        let isRunning = false;
+        let idcount = 1;
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+            setupEventListeners();
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Connection button
+            connectBtn.addEventListener('click', connectDevice);
+            
+            // Clear parsed data button
+            clearParsedBtn.addEventListener('click', clearParsedData);
+            
+            // Edit users modal
+            editUsersBtn.addEventListener('click', openEditModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            closeModalBtn2.addEventListener('click', closeModal);
+            addUserBtn.addEventListener('click', addUser);
+            
+            // Enter key support for user form
+            userNameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') addUser();
+            });
+            
+            userIdInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') addUser();
+            });
+            
+            // Close modal when clicking outside
+            editModal.addEventListener('click', function(e) {
+                if (e.target === editModal) closeModal();
+            });
+            
+            // Disconnect when page is closed
+            window.addEventListener('beforeunload', function() {
+                if (isConnected && port) {
+                    console.log('Page closing, disconnecting...');
+                    isReading = false;
+                    
+                    if (reader) {
+                        reader.cancel().catch(() => {});
+                    }
+                    
+                    if (port) {
+                        port.close().catch(() => {});
+                    }
+                }
+            });
+        }
+
+        // Initialize application
+        function init() {
+            console.log('Initializing system...');
+            
+            // Check browser support
+            if (!('serial' in navigator)) {
+                showStatus('❌ Your browser does not support Web Serial API', 'error');
+                connectBtn.disabled = true;
+                console.log('Error: Browser does not support Web Serial API');
+                return;
+            }
+            
+            console.log('✅ Web Serial API supported');
+            
+            // Check if in secure context
+            if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+                showStatus('⚠️ Recommended to use in HTTPS or localhost environment', 'warning');
+                console.log('Warning: Not in HTTPS or localhost environment');
+            } else {
+                console.log('✅ Secure environment (HTTPS or localhost)');
+            }
+            
+            showStatus('Please click "Connect Device" button to select your device', 'info');
+            console.log('System initialization complete, waiting for user action');
+            
+            initDB();
+            startTimer();
+        }
+
+        // Initialize database
+        function initDB() {
+            const request = indexedDB.open(dbName, dbVersion);
+            
+            request.onerror = function(event) {
+                showStatus("Cannot open database: " + event.target.errorCode, 'error');
+            };
+            
+            request.onsuccess = function(event) {
+                db = event.target.result;
+                showStatus("Database opened successfully", 'success');
+                loadAllUsers();
+            };
+            
+            request.onupgradeneeded = function(event) {
+                db = event.target.result;
+                
+                // Create object store (similar to table)
+                if (!db.objectStoreNames.contains(storeName)) {
+                    const objectStore = db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
+                    
+                    // Create indexes
+                    objectStore.createIndex('name', 'name', { unique: false });
+                    objectStore.createIndex('id', 'id', { unique: true });
+                    
+                    showStatus("Database created/upgraded", 'success');
+                }
+            };
+        }
+
+        // Load all users from database
+        function loadAllUsers() {
+            const transaction = db.transaction([storeName], 'readonly');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.getAll();
+            
+            request.onsuccess = function() {
+                const users = request.result;
+                displayUsers(users);
+            };
+            
+            request.onerror = function() {
+                showStatus('Error: Cannot load user data', 'error');
+            };
+        }
+
+        // Display users in table
+        function displayUsers(users) {
+            usersTableBody.innerHTML = '';
+            
+            if (users.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            // Sort by ID
+            users.sort((a, b) => a.id - b.id);
+            
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td class="actions">
+                        <button class="action-btn edit-btn" onclick="editUser(${user.id})">Edit</button>
+                        <button class="action-btn delete-btn" onclick="deleteUser(${user.id})">Delete</button>
+                    </td>
+                `;
+                
+                usersTableBody.appendChild(row);
+            });
+        }
+
+        // Get user name by ID
+        function getUserNameById(id) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject(new Error('Database not initialized'));
+                    return;
+                }
+                
+                const transaction = db.transaction([storeName], 'readonly');
+                const objectStore = transaction.objectStore(storeName);
+                const request = objectStore.get(id);
+                
+                request.onsuccess = function() {
+                    if (request.result) {
+                        resolve(request.result.name);
+                    } else {
+                        resolve(null);
+                    }
+                };
+                
+                request.onerror = function() {
+                    reject(new Error('Query failed'));
+                };
+            });
+        }
+
+        // Add user to database
+        function addUser() {
+            const id = parseInt(userIdInput.value);
+            const name = userNameInput.value.trim();
+            
+            if (!id || id <= 0) {
+                showStatus('Error: Please enter a valid ID (positive integer)', 'error');
+                return;
+            }
+            
+            if (!name) {
+                showStatus('Error: Please enter a username', 'error');
+                return;
+            }
+            
+            const user = { id: id, name: name };
+            
+            const transaction = db.transaction([storeName], 'readwrite');
+            const objectStore = transaction.objectStore(storeName);
+            
+            // Check if ID already exists
+            const checkRequest = objectStore.get(id);
+            
+            checkRequest.onsuccess = function() {
+                if (checkRequest.result) {
+                    showStatus('Error: ID already exists, please use another ID', 'error');
+                    return;
+                }
+                
+                // ID doesn't exist, add user
+                const addRequest = objectStore.add(user);
+                
+                addRequest.onsuccess = function() {
+                    showStatus(`User "${name}" (ID: ${id}) added successfully`, 'success');
+                    userIdInput.value = '';
+                    userNameInput.value = '';
+                    loadAllUsers();
+                };
+                
+                addRequest.onerror = function() {
+                    showStatus('Error: Cannot add user', 'error');
+                };
+            };
+            
+            checkRequest.onerror = function() {
+                showStatus('Error: Cannot check if ID exists', 'error');
+            };
+        }
+
+        // Edit user
+        function editUser(id) {
+            const transaction = db.transaction([storeName], 'readonly');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.get(id);
+            
+            request.onsuccess = function() {
+                const user = request.result;
+                if (user) {
+                    const newName = prompt(`Edit user "${user.name}":`, user.name);
+                    
+                    if (newName !== null && newName.trim() !== '') {
+                        updateUser(id, newName.trim());
+                    }
+                }
+            };
+            
+            request.onerror = function() {
+                showStatus('Error: Cannot load user data', 'error');
+            };
+        }
+
+        // Update user in database
+        function updateUser(id, newName) {
+            const user = { id: id, name: newName };
+            
+            const transaction = db.transaction([storeName], 'readwrite');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.put(user);
+            
+            request.onsuccess = function() {
+                showStatus('User information updated', 'success');
+                loadAllUsers();
+            };
+            
+            request.onerror = function() {
+                showStatus('Error: Cannot update user information', 'error');
+            };
+        }
+
+        // Delete user
+        function deleteUser(id) {
+            const transaction = db.transaction([storeName], 'readonly');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.get(id);
+            
+            request.onsuccess = function() {
+                const user = request.result;
+                if (user && confirm(`Are you sure you want to delete user "${user.name}" (ID: ${user.id})?`)) {
+                    deleteUserById(id);
+                }
+            };
+        }
+
+        // Execute delete operation
+        function deleteUserById(id) {
+            const transaction = db.transaction([storeName], 'readwrite');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.delete(id);
+            
+            request.onsuccess = function() {
+                showStatus('User deleted', 'success');
+                loadAllUsers();
+            };
+            
+            request.onerror = function() {
+                showStatus('Error: Cannot delete user', 'error');
+            };
+        }
+
+        // Open edit modal
+        function openEditModal() {
+            editModal.style.display = 'flex';
+            loadAllUsers();
+        }
+
+        // Close modal
+        function closeModal() {
+            editModal.style.display = 'none';
+            userIdInput.value = '';
+            userNameInput.value = '';
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = 'status ' + type;
+            statusMessage.style.display = 'block';
+            
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        // Update connection status display
+        function updateConnectionStatus(status, text) {
+            statusIndicator.className = 'status-indicator ' + status;
+            connectionText.textContent = text;
+        }
+
+        // Connect to device
+        function connectDevice() {
+            console.log('User clicked connect button');
+            
+            if (!('serial' in navigator)) {
+                showStatus('❌ Browser does not support Web Serial API', 'error');
+                return;
+            }
+            
+            updateConnectionStatus('connecting', 'Connecting...');
+            showStatus('Requesting device permission...', 'info');
+            
+            // Request device directly
+            navigator.serial.requestPort()
+                .then(selectedPort => {
+                    console.log('Device selection dialog shown, user selected device');
+                    port = selectedPort;
+                    return connectToPort(port);
+                })
+                .then(() => {
+                    console.log('Device connected successfully');
+                    showStatus('✅ Device connected successfully!', 'success');
+                    updateConnectionStatus('connected', 'Connected');
+                    isConnected = true;
+                    
+                    // Start reading data
+                    startReading();
+                })
+                .catch(error => {
+                    console.log(`Error during connection: ${error.message}`);
+                    
+                    if (error.name === 'NotFoundError') {
+                        showStatus('No device selected or no available device found', 'info');
+                    } else {
+                        showStatus(`❌ Connection failed: ${error.message}`, 'error');
+                    }
+                    
+                    updateConnectionStatus('disconnected', 'Connection failed');
+                    isConnected = false;
+                    connectBtn.disabled = false;
+                });
+        }
+
+        // Connect to port
+        function connectToPort(port) {
+            console.log('Starting port configuration and connection...');
+            
+            // Get configuration parameters
+            const baudRate = 57600;
+            const dataBits = 8;
+            const stopBits = 1;
+            const parity = 'none';
+            
+            console.log(`Using configuration: ${baudRate} baud, ${dataBits} data bits, ${stopBits} stop bits, ${parity} parity`);
+            
+            // Open port
+            return port.open({
+                baudRate: baudRate,
+                dataBits: dataBits,
+                stopBits: stopBits,
+                parity: parity,
+                flowControl: 'none'
+            }).then(() => {
+                console.log('Port opened successfully');
+                
+                const info = port.getInfo();
+                let deviceDetails = `<strong>Status:</strong> ✅ Connected`;
+                
+                deviceInfo.innerHTML = deviceDetails;
+            });
+        }
+
+        // Start reading data from port
+        function startReading() {
+            if (!port || !port.readable) {
+                console.log('Error: Port not readable');
+                return;
+            }
+            
+            isReading = true;
+            console.log('Starting data read loop');
+            
+            let buffer = "";
+            
+            const readLoop = () => {
+                if (!isReading || !port.readable) return;
+                
+                reader = port.readable.getReader();
+                
+                reader.read().then(({ value, done }) => {
+                    if (done) {
+                        console.log('Read completed (done)');
+                        reader.releaseLock();
+                        return;
+                    }
+                    
+                    // Process received data
+                    const decoder = new TextDecoder();
+                    const text = decoder.decode(value);
+                    
+                    buffer += text;
+                    
+                    if (buffer.includes('\n')) {
+                        // Split data by lines
+                        const lines = buffer.split('\n');
+                        
+                        for (const line of lines) {
+                            const trimmedLine = line.trim();
+                            if (trimmedLine.length > 0) {
+                                console.log(`Received raw data: ${trimmedLine}`);
+                                
+                                // Parse data
+                                const parsedData = parseData(trimmedLine);
+                                if (parsedData) {
+                                    // Update data table
+                                    getUserNameById(parsedData.idDecimal)
+                                        .then(name => {
+                                            if (name) {
+                                                parsedData.name = name;
+                                                updateParsedDataTable(parsedData);
+                                                console.log(`Analysis result: ID=${parsedData.idDecimal}, Time difference=${parsedData.timeDiff}`);
+                                            } else {
+                                                updateParsedDataTable(parsedData);
+                                            }
+                                            console.log(dataLists);
+                                        });
+                                }
+                            }
+                        }
+                        buffer = "";
+                    }
+                    
+                    reader.releaseLock();
+                    
+                    // Continue reading
+                    if (isReading) {
+                        readLoop();
+                    }
+                }).catch(error => {
+                    console.log(`Read error: ${error.message}`);
+                    reader.releaseLock();
+                    
+                    // If still connected, continue reading
+                    if (isReading && port) {
+                        setTimeout(readLoop, 100);
+                    }
+                });
+            };
+            
+            readLoop();
+        }
+
+        // Parse received data
+        function parseData(data) {
+            const cleanData = data.trim();
+            
+            // Check length
+            if (cleanData.length < 6) {
+                console.log(`Data length insufficient: ${cleanData}`);
+                return null;
+            }
+            
+            // Extract ID (first six characters)
+            const idHex = cleanData.substring(0, 6);
+            const idDecimal = parseInt(idHex, 16);
+            
+            // Extract timestamp (remaining part)
+            const timestampHex = cleanData.substring(6);
+            const timestampDecimal = parseInt(timestampHex, 16);
+            
+            // Calculate time difference
+            let timeDiff = '-';
+            const lastRecord = findLastValidRecord(dataLists, idDecimal);
+            
+            if (lastRecord !== null) {
+                timeDiff = (timestampDecimal - lastRecord.millisecond) / 4000;
+            }
+            
+            return {
+                raw: cleanData,
+                idHex: idHex,
+                idDecimal: idDecimal,
+                timestampHex: timestampHex,
+                timestampDecimal: timestampDecimal,
+                timeDiff: timeDiff,
+                name: ""
+            };
+        }
+
+        // Find last valid record for the given ID
+        function findLastValidRecord(dataList, id) {
+            if (!dataList || dataList.length === 0) {
+                return null;
+            }
+            
+            // Search from last record backwards
+            for (let i = dataList.length - 1; i >= 0; i--) {
+                if (dataList[i].id !== null && dataList[i].id === id) {
+                    return dataList[i];
+                }
+            }
+            
+            return null; // No valid record found
+        }
+
+        // Update parsed data table
+        function updateParsedDataTable(parsedData) {
+            const row = document.createElement('tr');
+            
+            // Index - based on dataHistory length
+            const indexCell = document.createElement('td');
+            indexCell.textContent = dataHistory.length + 1;
+            row.appendChild(indexCell);
+            
+            // ID (decimal)
+            const idDecimalCell = document.createElement('td');
+            idDecimalCell.textContent = parsedData.idDecimal;
+            row.appendChild(idDecimalCell);
+            
+            // Name
+            const nameCell = document.createElement('td');
+            nameCell.textContent = parsedData.name;
+            row.appendChild(nameCell);
+            
+            // Time difference
+            const timeDiffCell = document.createElement('td');
+            timeDiffCell.textContent = parsedData.timeDiff;
+            row.appendChild(timeDiffCell);
+            
+            // Current time
+            const timeCell = document.createElement('td');
+            timeCell.textContent = getCurrentTime();
+            row.appendChild(timeCell);
+            
+            // Add to data list
+            dataLists.push({
+                id: parsedData.idDecimal,
+                name: parsedData.name,
+                sec: parsedData.timeDiff,
+                millisecond: parsedData.timestampDecimal,
+                nowTime: getCurrentTime()
+            });
+            
+            // Insert at the beginning of the table
+            if (parsedDataBody.firstChild) {
+                parsedDataBody.insertBefore(row, parsedDataBody.firstChild);
+            } else {
+                parsedDataBody.appendChild(row);
+            }
+            
+            // Save to history (add to beginning of array)
+            dataHistory.unshift(parsedData);
+            
+            // Update all row indexes (because new row inserted at beginning affects all row indexes)
+            updateRowIndexes();
+            
+            // Keep scroll position at top (optional)
+            parsedDataBody.parentElement.scrollTop = 0;
+        }
+
+        // Update all row indexes
+        function updateRowIndexes() {
+            const rows = parsedDataBody.querySelectorAll('tr');
+            rows.forEach((row, index) => {
+                row.cells[0].textContent = rows.length - index;
+            });
+        }
+
+        // Clear parsed data
+        function clearParsedData() {
+            parsedDataBody.innerHTML = '';
+            dataHistory = [];
+            lastTimestamp = null;
+            dataLists = [];
+            console.log(dataLists);
+            idcount = 1;
+            console.log('Parsed data cleared');
+        }
+
+        // Get current time
+        function getCurrentTime() {
+            const now = new Date();
+            
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+        }
+
+        // Start timer
+        function startTimer() {
+            if (!isRunning) {
+                intervalId = setInterval(interSpeakText, 500);
+                isRunning = true;
+                console.log('Timer started');
+            }
+        }
+
+        // Pause timer
+        function pauseTimer() {
+            if (isRunning) {
+                clearInterval(intervalId);
+                intervalId = null;
+                isRunning = false;
+                console.log('Timer paused');
+            }
+        }
+
+        // Interval function for text-to-speech
+        function interSpeakText() {
+            if (speechSynthesis.speaking) return;
+            
+            if (dataHistory.length > idcount) {
+                pauseTimer();
+                
+                for (let i = idcount; dataHistory.length >= i; i++) {
+                    const record = dataLists[i - 1];
+                    idcount = i;
+                    speakText(record.name + " " +  parseFloat(record.sec).toFixed(2));
+                    console.log(record.name);
+                }
+                
+                startTimer();
+            }
+        }
+
+        // Text-to-speech function
+        function speakText(text) {
+            if (text === '') {
+                alert('Please enter some text!');
+                return;
+            }
+            
+            // Use browser's speech synthesis API
+            if ('speechSynthesis' in window) {
+                // Stop any ongoing speech
+                window.speechSynthesis.cancel();
+                
+                // Create new speech instance
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Set speech properties
+                utterance.rate = 1;
+                utterance.pitch = 1;
+                utterance.volume = 0.8;
+                
+                // Play speech
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Sorry, your browser does not support speech synthesis!');
+            }
+        }
+    </script>
+</body>
+</html>
