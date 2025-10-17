@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<!-- saved from url=(0030)https://rcloop.yuangmo.com.tw/ -->
+<html lang="zh-TW" class="trancy-zh-Hant translated-ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RC Loop Speed</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        h1 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .card h3 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card h3 .icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-success {
+            background: var(--success);
+        }
+        
+        .btn-success:hover {
+            background: #219653;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .connection-status {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .connected {
+            background: var(--success);
+        }
+        
+        .disconnected {
+            background: var(--danger);
+        }
+        
+        .connecting {
+            background: var(--warning);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .config-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            background: white;
+        }
+        
+        .data-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .data-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .send-section, .receive-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+            margin-bottom: 15px;
+            font-family: monospace;
+        }
+        
+        .receive-box {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            height: 120px;
+            overflow-y: auto;
+            font-family: monospace;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+            font-size: 14px;
+        }
+        
+        .parsed-data-container {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .parsed-data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .parsed-data-table th, .parsed-data-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        .parsed-data-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+        
+        .parsed-data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .log-box {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        
+        .troubleshoot-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .troubleshoot-section h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .simple-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+            transition: all 0.2s;
+        }
+        
+        .simple-btn:hover {
+            background: #2980b9;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .main-action {
+            margin: 40px 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #2575fc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn:hover {
+            background-color: #1a68e8;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-danger {
+            background-color: #ff4757;
+        }
+        
+        .btn-danger:hover {
+            background-color: #ff3742;
+        }
+        
+        .btn-success {
+            background-color: #2ed573;
+        }
+        
+        .btn-success:hover {
+            background-color: #25c768;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        
+        .status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* 弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+            transition: color 0.3s;
+        }
+        
+        .close-btn:hover {
+            color: #333;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        input:focus {
+            border-color: #2575fc;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(37, 117, 252, 0.2);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .edit-btn {
+            background-color: #ffa502;
+            color: white;
+        }
+        
+        .edit-btn:hover {
+            background-color: #e59400;
+        }
+        
+        .delete-btn {
+            background-color: #ff4757;
+            color: white;
+        }
+        
+        .delete-btn:hover {
+            background-color: #ff3742;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #777;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .user-form {
+            display: grid;
+            grid-template-columns: 1fr 2fr auto;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: end;
+        }
+        
+        @media (max-width: 600px) {
+            .user-form {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .user-form button {
+            white-space: nowrap;
+        }
+        
+        .id-input {
+            max-width: 100px;
+        }
+    </style>
+<link type="text/css" rel="stylesheet" charset="UTF-8" href="./RC Loop Speed(tw)_files/m=el_main_css"></head>
+<body>
+    <div class="container">
+        <header>
+            <h8><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">🔵 RC Loops Speed</font></font></h8>
+        </header>
+        
+        <div class="card">
+            <h3><span class="icon"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">📊</font></font></span><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">連接狀態</font></font></h3>
+            <div class="connection-status">
+                <div id="status-indicator" class="status-indicator connected"></div>
+                <span id="connection-text"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">已連接</font></font></span>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-success" id="connect-btn"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">
+                    🔌 連接
+                </font></font></button>
+            </div>
+            
+            <div id="device-info" class="status info"> <strong><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">狀態:</font></font></strong><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;"> ✅ 已連接</font></font></div>
+        </div>
+
+       
+
+       
+
+        <div class="card">
+            <h3><span class="icon"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">🔍</font></font></span><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">圈速</font></font></h3>
+           
+            <div class="parsed-data-container">
+                <table class="parsed-data-table" id="parsed-data-table">
+                    <thead>
+                        <tr>
+                            <th><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">序號</font></font></th>                           
+                            <th><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">ID</font></font></th>
+                            <th><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">Name</font></font></th>
+                            <th><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">秒</font></font></th>
+                            <th><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">NOW TIME</font></font></th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="parsed-data-body"><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">11</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">1.445</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:49</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">10</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">7.3405</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:48</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">9</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">1.598</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:40</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">8</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2.055</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:39</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">7</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">5.2465</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:37</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">6</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">6.2945</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:32</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">5</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">1.8515</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:25</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">1.7535</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:23</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">3</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">1.7225</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:22</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2.6415</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:20</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">1</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">-</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:17</font></font></td></tr>
+                        <!-- 解析后的数据将在这里显示 -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-warning" id="clear-parsed-btn"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">🗑️ 清空圈速紀錄</font></font></button>
+            </div>
+        </div>
+        <div class="status" id="statusMessage"></div>
+        
+        <div class="main-action">
+            <button class="btn" id="editUsersBtn"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">編輯使用者</font></font></button>
+        </div>
+        <div class="card">
+           
+            <div id="status-area"></div>
+            
+        </div>
+    </div>
+ <!-- 编辑用户弹窗 -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">使用者管理</font></font></h3>
+                <button class="close-btn" id="closeModal"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">×</font></font></button>
+            </div>
+            <div class="modal-body">
+                <div class="user-form">
+                    <div class="form-group">
+                        <label for="userId"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">ID</font></font></label>
+                        <input type="number" id="userId" class="id-input" placeholder="ID" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="userName"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">姓名</font></font></label>
+                        <input type="text" id="userName" placeholder="輸入使用者名稱">
+                    </div>
+                    <button class="btn btn-success" id="addUserBtn"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">新增用戶</font></font></button>
+                </div>
+                
+                <div id="usersTableContainer">
+                    <table id="usersTable">
+                        <thead>
+                            <tr>
+                                <th><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">ID</font></font></th>
+                                <th><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">姓名</font></font></th>
+                                <th><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">操作</font></font></th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody"><tr>
+                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">123</font></font></td>
+                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">asd1</font></font></td>
+                    <td class="actions">
+                        <button class="action-btn edit-btn" onclick="editUser(123)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">編輯</font></font></button>
+                        <button class="action-btn delete-btn" onclick="deleteUser(123)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">刪除</font></font></button>
+                    </td>
+                </tr><tr>
+                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">1234567</font></font></td>
+                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">vv</font></font></td>
+                    <td class="actions">
+                        <button class="action-btn edit-btn" onclick="editUser(1234567)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">編輯</font></font></button>
+                        <button class="action-btn delete-btn" onclick="deleteUser(1234567)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">刪除</font></font></button>
+                    </td>
+                </tr><tr>
+                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4570098</font></font></td>
+                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">bbbb</font></font></td>
+                    <td class="actions">
+                        <button class="action-btn edit-btn" onclick="editUser(4570098)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">編輯</font></font></button>
+                        <button class="action-btn delete-btn" onclick="deleteUser(4570098)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">刪除</font></font></button>
+                    </td>
+                </tr><tr>
+                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747690</font></font></td>
+                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">范志強</font></font></td>
+                    <td class="actions">
+                        <button class="action-btn edit-btn" onclick="editUser(4747690)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">編輯</font></font></button>
+                        <button class="action-btn delete-btn" onclick="deleteUser(4747690)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">刪除</font></font></button>
+                    </td>
+                </tr><tr>
+                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td>
+                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td>
+                    <td class="actions">
+                        <button class="action-btn edit-btn" onclick="editUser(4747700)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">編輯</font></font></button>
+                        <button class="action-btn delete-btn" onclick="deleteUser(4747700)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">刪除</font></font></button>
+                    </td>
+                </tr><tr>
+                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">5555555</font></font></td>
+                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">ddd</font></font></td>
+                    <td class="actions">
+                        <button class="action-btn edit-btn" onclick="editUser(5555555)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">編輯</font></font></button>
+                        <button class="action-btn delete-btn" onclick="deleteUser(5555555)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">刪除</font></font></button>
+                    </td>
+                </tr></tbody>
+                    </table>
+                    <div id="emptyState" class="empty-state" style="display: none;">
+                        <i><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">📊</font></font></i>
+                        <p><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">暫無用戶數據，請新增用戶</font></font></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="closeModalBtn"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">關閉</font></font></button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        
+        function encodeTransponderFull(transponderNumber, statusBits, lastByte) {
+            const TRANSPONDER_PACKET_LENGTH = 12;
+            const POLY = 0x0000776107n; // 使用 BigInt 表示多項式
+            
+            let retValue = new Array(TRANSPONDER_PACKET_LENGTH).fill(0);
+            
+            // 將 lastByte 添加到 transponderNumber 中
+            transponderNumber = BigInt(transponderNumber) | (BigInt(lastByte) << 24n);
+            
+            let fflop = 0n, temp = 0n, temp1;
+            let i, j = 0;
+    
+            // 第一階段：處理 transponderNumber 和 statusBits
+            for (i = 0; i < 40; i++) {
+                temp <<= 1n;
+                if (j < 3) {
+                    // 這不是狀態位
+                    temp |= (transponderNumber & 0x20000000n) >> 29n;
+                    transponderNumber <<= 1n;
+                } else {
+                    // 這是狀態位
+                    temp |= (BigInt(statusBits) & 0x0200n) >> 9n;
+                    statusBits = Number(BigInt(statusBits) << 1n); // 轉回 Number 以便後續使用
+                }
+                j = (j < 3) ? j + 1 : 0;
+            }
+    
+            j = 0;
+            let k = 2;
+            
+            fflop |= (temp & 0x01n);
+            temp >>= 1n;
+    
+            // 第二階段：計算 CRC 並填充輸出數組
+            for (i = 0; i < 40; i++) {
+                let bit_in = temp & 0x01n;
+                
+                // 計算奇偶校驗（流中1的數量）
+                temp1 = fflop & POLY;
+                temp1 ^= temp1 >> 1n;
+                temp1 ^= temp1 >> 2n;
+                temp1 = (temp1 & 0x1111111111111111n) * 0x1111111111111111n;
+                temp1 = (temp1 >> 60n) & 0x01n;
+                
+                if (k >= TRANSPONDER_PACKET_LENGTH) {
+                    // 錯誤情況
+                    break;
+                }
+        
+                // 移位並設置輸出字節的位
+                retValue[k] <<= 1;
+                retValue[k] |= Number(temp1 ^ bit_in);
+                retValue[k] <<= 1;
+                retValue[k] |= Number(temp1 ^ bit_in ^ (fflop & 0x01n));
+                
+                if (j < 3) {
+                    j++;
+                } else {
+                    // 每4位一個新字節
+                    j = 0;
+                    k++;
+                }
+                
+                temp >>= 1n;
+                fflop <<= 1n;
+                fflop |= bit_in;
+            }
+    
+            // 設置頭部字節
+            retValue[0] = 0xF9;
+            retValue[1] = 0x16;
+            
+            return retValue;
+        }
+        //let result = encodeTransponderFull(4747731, 0, 0);
+        //alert(result);
+        /**
+         * Decodes a RC3 transponder packet (filled with preamble)
+         * @param {number[]} telegram - The telegram byte array (must be length 12)
+         * @returns {number} The decoded transponder number
+         */
+        function decodeRC3Telegram(telegram) {
+            const TRANSPONDER_PACKET_LENGTH = 12;
+            
+            if (!telegram || telegram.length !== TRANSPONDER_PACKET_LENGTH) {
+                throw new Error("Wrong telegram size");
+            }
+
+            let decoded = 0;
+            
+            // Process all bytes in reverse order except preamble (indices 0-1)
+            for (let k = TRANSPONDER_PACKET_LENGTH - 1; k >= 2; k--) {
+                let digit = telegram[k];
+                
+                // Process 3 pairs of bits from each byte
+                for (let b = 0; b < 3; b++) {
+                    decoded <<= 1;
+                    
+                    // Check if the 2-bit pattern is 0x01 or 0x02
+                    if ((digit & 0x03) === 0x01 || (digit & 0x03) === 0x02) {
+                        decoded |= 1;
+                    }
+                    
+                    digit >>= 2; // Move to the next 2-bit pair
+                }
+            }
+            
+            return decoded >>> 0; // Ensure unsigned 32-bit result
+        }
+        const telegram = [0xF9,0x16,0xD4,0xFB,0x26,0x30,0x16,0x03,0x08,0x34,0xFF,0x0C];
+        const decodedNumber = decodeRC3Telegram(telegram);
+        console.log("Decoded transponder number:", decodedNumber);
+// 使用示例
+// let result = encodeTransponderFull(123456, 0x1FF, 0xAB);
+// console.log(result);
+ // DOM 元素
+            const connectBtn = document.getElementById('connect-btn');
+            const sendBtn = document.getElementById('send-btn');
+            const clearSendBtn = document.getElementById('clear-send-btn');
+            const clearReceiveBtn = document.getElementById('clear-receive-btn');
+            const clearParsedBtn = document.getElementById('clear-parsed-btn');
+           
+            
+            const deviceInfo = document.getElementById('device-info');
+            const sendData = document.getElementById('send-data');
+            const receiveData = document.getElementById('receive-data');
+            const statusArea = document.getElementById('status-area');
+            const logArea = document.getElementById('log-area');
+            const statusIndicator = document.getElementById('status-indicator');
+            const connectionText = document.getElementById('connection-text');
+            const parsedDataBody = document.getElementById('parsed-data-body');
+
+             // DOM元素
+            const editUsersBtn = document.getElementById('editUsersBtn');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            // 弹窗相关元素
+            const editModal = document.getElementById('editModal');
+            const closeModalBtn = document.getElementById('closeModal');
+            const closeModalBtn2 = document.getElementById('closeModalBtn');
+            const usersTableBody = document.getElementById('usersTableBody');
+            const emptyState = document.getElementById('emptyState');
+            const userIdInput = document.getElementById('userId');
+            const userNameInput = document.getElementById('userName');
+            const addUserBtn = document.getElementById('addUserBtn');
+        // 简化版代码 - 专注于解决连接问题
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化
+            init();
+            setupEventListeners() ;
+        });
+        //----------------
+             // 设置事件监听器
+        function setupEventListeners() {
+            // 打开编辑弹窗
+            editUsersBtn.addEventListener('click', function() {
+                openEditModal();
+            });    
+        
+            // 关闭弹窗
+            closeModalBtn.addEventListener('click', function() {
+                closeModal();
+            });
+            
+            closeModalBtn2.addEventListener('click', function() {
+                closeModal();
+            });
+            
+            // 添加用户
+            addUserBtn.addEventListener('click', function() {
+                addUser();
+            });
+            
+            // 按Enter键添加用户
+            userNameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addUser();
+                }
+            });
+            
+            userIdInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addUser();
+                }
+            });
+            
+            // 点击弹窗外部关闭
+            editModal.addEventListener('click', function(e) {
+                if (e.target === editModal) {
+                    closeModal();
+                }
+            });
+        }
+
+        // 打开编辑弹窗
+        function openEditModal() {
+            editModal.style.display = 'flex';
+            loadAllUsers();
+        }
+
+        // 关闭弹窗
+        function closeModal() {
+            editModal.style.display = 'none';
+            userIdInput.value = '';
+            userNameInput.value = '';
+        }
+
+        // 添加用户
+        function addUser() {
+            
+            const id = parseInt(userIdInput.value);
+            const name = userNameInput.value.trim();
+            
+            if (!id || id <= 0) {
+                showStatus('错误: 请输入有效的ID（正整数）', 'error');
+                return;
+            }
+            
+            if (!name) {
+                showStatus('错误: 请输入用户名', 'error');
+                return;
+            }
+            
+            const user = { id: id, name: name };
+            
+            const transaction = db.transaction([storeName], 'readwrite');
+            const objectStore = transaction.objectStore(storeName);
+            
+            // 先检查ID是否已存在
+            const checkRequest = objectStore.get(id);
+            
+            checkRequest.onsuccess = function() {
+                if (checkRequest.result) {
+                    showStatus('错误: ID已存在，请使用其他ID', 'error');
+                    return;
+                }
+                
+                // ID不存在，可以添加用户
+                const addRequest = objectStore.add(user);
+                addRequest.onsuccess = function() {
+                    showStatus(`用户 "${name}" (ID: ${id}) 添加成功`, 'success');
+                    userIdInput.value = '';
+                    userNameInput.value = '';
+                    loadAllUsers();
+                };
+                
+                addRequest.onerror = function() {
+                    showStatus('错误: 无法添加用户', 'error');
+                };
+            };
+            
+            checkRequest.onerror = function() {
+                showStatus('错误: 无法检查ID是否存在', 'error');
+            };
+        }
+
+       
+
+        // 显示用户列表
+        function displayUsers(users) {
+            usersTableBody.innerHTML = '';
+            
+            if (users.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            // 按ID排序
+            users.sort((a, b) => a.id - b.id);
+            
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td class="actions">
+                        <button class="action-btn edit-btn" onclick="editUser(${user.id})">编辑</button>
+                        <button class="action-btn delete-btn" onclick="deleteUser(${user.id})">删除</button>
+                    </td>
+                `;
+                
+                usersTableBody.appendChild(row);
+            });
+        }
+
+        // 编辑用户
+        function editUser(id) {
+            const transaction = db.transaction([storeName], 'readonly');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.get(id);
+            
+            request.onsuccess = function() {
+                const user = request.result;
+                if (user) {
+                    const newName = prompt(`编辑用户 "${user.name}"：`, user.name);
+                    
+                    if (newName !== null && newName.trim() !== '') {
+                        updateUser(id, newName.trim());
+                    }
+                }
+            };
+            
+            request.onerror = function() {
+                showStatus('错误: 无法加载用户数据', 'error');
+            };
+        }
+
+        // 更新用户
+        function updateUser(id, newName) {
+            const user = { id: id, name: newName };
+            
+            const transaction = db.transaction([storeName], 'readwrite');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.put(user);
+            
+            request.onsuccess = function() {
+                showStatus('用户信息已更新', 'success');
+                loadAllUsers();
+            };
+            
+            request.onerror = function() {
+                showStatus('错误: 无法更新用户信息', 'error');
+            };
+        }
+
+        // 删除用户
+        function deleteUser(id) {
+            const transaction = db.transaction([storeName], 'readonly');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.get(id);
+            
+            request.onsuccess = function() {
+                const user = request.result;
+                if (user && confirm(`确定要删除用户 "${user.name}" (ID: ${user.id}) 吗？`)) {
+                    deleteUserById(id);
+                }
+            };
+        }
+
+        // 执行删除操作
+        function deleteUserById(id) {
+            const transaction = db.transaction([storeName], 'readwrite');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.delete(id);
+            
+            request.onsuccess = function() {
+                showStatus('用户已删除', 'success');
+                loadAllUsers();
+            };
+            
+            request.onerror = function() {
+                showStatus('错误: 无法删除用户', 'error');
+            };
+        }
+
+        // 显示状态消息
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = 'status ' + type;
+            
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 3000);
+        }
+        //----------------
+        
+            // 全局变量
+            let port = null;
+            let reader = null;
+            let isConnected = false;
+            let isReading = false;
+            let dataLists=[];
+            // 数据存储
+            let dataHistory = [];
+            let lastTimestamp = null;
+            //
+            let db;
+            const dbName = "UserDB";
+            const dbVersion = 1;
+            const storeName = "users";
+
+            // 初始化
+            function init() {
+                console.log('系统初始化开始...');
+                
+                // 检查浏览器支持
+                if (!('serial' in navigator)) {
+                    showStatus('❌ 您的浏览器不支持 Web Serial API', 'error');
+                    connectBtn.disabled = true;
+                    console.log('错误: 浏览器不支持 Web Serial API');
+                    return;
+                }
+                
+                console.log('✅ Web Serial API 支持正常');
+                
+                // 检查是否在安全上下文中
+                if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+                    showStatus('⚠️ 建议在 HTTPS 或 localhost 环境下使用', 'warning');
+                    console.log('警告: 当前环境非 HTTPS 或 localhost');
+                } else {
+                    console.log('✅ 当前环境安全 (HTTPS 或 localhost)');
+                }
+                
+                showStatus('请点击"连接设备"按钮选择您的设备', 'info');
+                console.log('系统初始化完成，等待用户操作');
+                 initDB();
+                 setupEventListeners();
+                 
+            }
+            // 初始化数据库
+            function initDB() {
+                const request = indexedDB.open(dbName, dbVersion);
+            
+                request.onerror = function(event) {
+                    showStatus("无法打开数据库: " + event.target.errorCode, 'error');
+                };
+            
+                request.onsuccess = function(event) {
+                    db = event.target.result;
+                    showStatus("数据库已成功打开", 'success');
+                    loadAllUsers();
+                };
+            
+                request.onupgradeneeded = function(event) {
+                    db = event.target.result;
+                
+                    // 创建对象存储空间（类似于表）
+                    if (!db.objectStoreNames.contains(storeName)) {
+                        const objectStore = db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
+                    
+                        // 创建索引
+                        objectStore.createIndex('name', 'name', { unique: false });
+                        objectStore.createIndex('id', 'id', { unique: true });
+                    
+                        showStatus("数据库已创建/升级", 'success');
+                    }
+                };
+            }
+            // 加载所有用户
+            function loadAllUsers() {
+                const transaction = db.transaction([storeName], 'readonly');
+                const objectStore = transaction.objectStore(storeName);
+                const request = objectStore.getAll();
+                request.onsuccess = function() {
+                    const users = request.result;
+                    displayUsers(users);
+                };
+            
+                request.onerror = function() {
+                    showStatus('错误: 无法加载用户数据', 'error');
+                };
+            }
+            // 根据ID获取用户姓名的函数
+        function getUserNameById(id) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject(new Error('数据库未初始化'));
+                    return;
+                }
+                
+                const transaction = db.transaction([storeName], 'readonly');
+                const objectStore = transaction.objectStore(storeName);
+                const request = objectStore.get(id);
+                
+                request.onsuccess = function() {
+                    if (request.result) {
+                        resolve(request.result.name);
+                    } else {
+                        resolve(null);
+                    }
+                };
+                
+                request.onerror = function() {
+                    reject(new Error('查询失败'));
+                };
+            });
+        }
+
+            // 更新连接状态显示
+            function updateConnectionStatus(status, text) {
+                statusIndicator.className = 'status-indicator ' + status;
+                connectionText.textContent = text;
+            }
+
+            
+
+            function showStatus(message, type, isModal = false) {
+                // 如果是模態框的狀態消息，使用 statusMessage 元素
+                const targetElement = isModal ? statusMessage : statusArea;
+                
+                // 創建狀態消息元素
+                const statusDiv = document.createElement('div');
+                statusDiv.className = `status ${type}`;
+                statusDiv.textContent = message;
+                
+                // 清除之前的狀態消息
+                targetElement.innerHTML = '';
+                targetElement.appendChild(statusDiv);
+                
+                // 如果不是錯誤類型的消息，3秒後自動隱藏
+                if (type !== 'error') {
+                    setTimeout(() => {
+                        if (statusDiv.parentElement) {
+                            statusDiv.style.opacity = '0';
+                            statusDiv.style.transition = 'opacity 0.5s';
+                            setTimeout(() => {
+                                if (statusDiv.parentElement) {
+                                    statusDiv.remove();
+                                }
+                            }, 500);
+                        }
+                    }, 3000);
+                }
+            }
+            // 连接设备 - 简化版本
+            connectBtn.addEventListener('click', function() {
+                console.log('用户点击了连接按钮');
+                
+                if (!('serial' in navigator)) {
+                    showStatus('❌ 浏览器不支持 Web Serial API', 'error');
+                    return;
+                }
+                
+                updateConnectionStatus('connecting', '连接中...');
+                showStatus('正在请求设备权限...', 'info');
+                
+                // 直接请求设备
+                navigator.serial.requestPort()
+                    .then(selectedPort => {
+                        console.log('设备选择对话框已弹出，用户选择了设备');
+                        port = selectedPort;
+                        return connectToPort(port);
+                    })
+                    .then(() => {
+                        console.log('设备连接成功');
+                        showStatus('✅ 设备连接成功！', 'success');
+                        updateConnectionStatus('connected', '已连接');
+                        isConnected = true;
+                        
+                       
+                        
+                        // 开始读取数据
+                        startReading();
+                    })
+                    .catch(error => {
+                        console.log(`连接过程中出错: ${error.message}`);
+                        
+                        if (error.name === 'NotFoundError') {
+                            showStatus('未选择设备或未找到可用设备', 'info');
+                        } else {
+                            showStatus(`❌ 连接失败: ${error.message}`, 'error');
+                        }
+                        
+                        updateConnectionStatus('disconnected', '连接失败');
+                        isConnected = false;
+                        connectBtn.disabled = false;
+                    });
+            });
+
+            // 连接到端口
+            function connectToPort(port) {
+                console.log('开始配置并连接端口...');
+                
+                // 获取配置参数
+                const baudRate = "57600";
+                const dataBits = "8";
+                const stopBits = "1";
+                const parity = "none";
+                
+                console.log(`使用配置: ${baudRate} baud, ${dataBits} data bits, ${stopBits} stop bits, ${parity} parity`);
+                
+                // 打开端口
+                return port.open({
+                    baudRate: baudRate,
+                    dataBits: dataBits,
+                    stopBits: stopBits,
+                    parity: parity,
+                    flowControl: 'none'
+                }).then(() => {
+                    console.log('端口打开成功');
+                    
+                    const info = port.getInfo();
+                    let deviceDetails = ` <strong>状态:</strong> ✅ 已连接`;                  
+                    
+                    
+                    deviceInfo.innerHTML = deviceDetails;
+                });
+            }
+
+            
+
+            // 开始读取数据
+            function startReading() {
+                if (!port || !port.readable) {
+                    console.log('错误: 端口不可读');
+                    return;
+                }
+                
+                isReading = true;
+                console.log('开始读取数据循环');
+                var strs="";
+                const readLoop = () => {
+                    if (!isReading || !port.readable) return;
+                    
+                    reader = port.readable.getReader();
+                    
+                    reader.read().then(({ value, done }) => {
+                        if (done) {
+                            console.log('读取完成 (done)');
+                            reader.releaseLock();
+                            return;
+                        }
+                        
+                        // 处理接收到的数据
+                        const decoder = new TextDecoder();
+                        const text = decoder.decode(value);
+                        
+                       
+                        strs+=text;
+                        if(strs.includes('\n')){
+// 按行分割数据
+                        const lines = strs.split('\n');
+                        
+                        for (const line of lines) {
+                            const trimmedLine = line.trim();
+                            if (trimmedLine.length > 0) {
+                                console.log(`接收到原始数据: ${trimmedLine}`);
+                                
+                                // 解析数据
+                                const parsedData = parseData(trimmedLine);
+                                if (parsedData) {
+                                    // 更新數據表格
+                                    
+                                     getUserNameById(parsedData.idDecimal)
+                                    .then(name => {                   
+                                        if (name) {
+                                            parsedData.name=name;
+                                            
+                                           
+                                            updateParsedDataTable(parsedData);
+                                           // speakText(name+" "+parsedData.timeDiff.toFixed(2)); 
+                                            console.log(`分析結果: ID=${parsedData.idDecimal}, 時間差=${parsedData.timeDiff}`);
+                                        } else{
+                                             updateParsedDataTable(parsedData);
+                                             //speakText(parsedData.timeDiff); 
+                                        }
+                                         console.log(dataLists);
+                                    });
+                                    
+                                }
+                            }
+                        }
+                        strs="";
+                        }
+                        
+                        
+                        reader.releaseLock();
+                        
+                        // 继续读取
+                        if (isReading) {
+                            readLoop();
+                        }
+                    }).catch(error => {
+                        console.log(`讀取錯誤: ${error.message}`);
+                        reader.releaseLock();
+                        
+                        //如果仍然連接、則繼續讀取
+                        if (isReading && port) {
+                            setTimeout(readLoop, 100);
+                        }
+                    });
+                };
+                
+                readLoop();
+            }
+
+            // 解析數據
+            function parseData(data) {
+            
+                const cleanData = data.trim();
+                
+                // 檢查長度
+                if (cleanData.length < 6) {
+                    console.log(`數據長度不足: ${cleanData}`);
+                    return null;
+                }
+                
+                // 提取ID (前六個字元)
+                const idHex = cleanData.substring(0, 6);
+                const idDecimal = parseInt(idHex, 16);
+                
+                // 提取時間戳記 (剩餘部分)
+                const timestampHex = cleanData.substring(6);
+                const timestampDecimal = parseInt(timestampHex, 16);
+                
+                // 計算時間差
+                let timeDiff = '-';
+                const t=findLastValidRecord(dataLists,idDecimal);
+                //console.log(t);
+                if (t !== null) {
+                    timeDiff = (timestampDecimal - t.millisecond)/4000;
+                }
+                
+                // 更新時間
+                //lastTimestamp = timestampDecimal;
+                
+                return {
+                    raw: cleanData,
+                    idHex: idHex,
+                    idDecimal: idDecimal,
+                    timestampHex: timestampHex,
+                    timestampDecimal: timestampDecimal,
+                    timeDiff: timeDiff,
+                    name:""
+                };
+            }
+            function findLastValidRecord(dataList,id) {
+            if (!dataList || dataList.length === 0) {
+                return null;
+            }
+            
+            // 從最後一筆開始往前找
+            for (let i = dataList.length - 1; i >= 0; i--) {
+                if (dataList[i].id !== null && dataList[i].id === id) {
+                return dataList[i];
+                }
+            }
+            
+            return null; // 沒有找到任何有效紀錄
+            }
+            // 更新解析數據表格
+            function updateParsedDataTable(parsedData) {
+                const row = document.createElement('tr');
+    
+                // 序号 - 修改为基于dataHistory长度计算
+                const indexCell = document.createElement('td');
+                indexCell.textContent = dataHistory.length + 1;
+                row.appendChild(indexCell);
+    
+                // ID (10進制)
+                const idDecimalCell = document.createElement('td');
+                idDecimalCell.textContent = parsedData.idDecimal;
+                row.appendChild(idDecimalCell);
+                // name
+                const nameCell = document.createElement('td');
+                nameCell.textContent = parsedData.name;
+                row.appendChild(nameCell);
+                // 時間差
+                const timeDiffCell = document.createElement('td');
+                timeDiffCell.textContent = parsedData.timeDiff;
+                row.appendChild(timeDiffCell);
+    
+                const time = document.createElement('td');
+                time.textContent = getCurrentTime();
+                row.appendChild(time);
+                dataLists.push({
+                    id: parsedData.idDecimal,
+                    name: parsedData.name,
+                    sec: parsedData.timeDiff,
+                    millisecond: parsedData.timestampDecimal,
+                    nowTime: getCurrentTime()
+                });    
+                playBeep();
+                // 修改这里：使用insertBefore而不是appendChild，插入到第一个子元素之前
+                if (parsedDataBody.firstChild) {
+                    parsedDataBody.insertBefore(row, parsedDataBody.firstChild);
+                } else {
+                    parsedDataBody.appendChild(row);
+                }
+    
+                // 保存 - 修改为添加到数组开头
+                dataHistory.unshift(parsedData);
+    
+                // 更新所有行的序号（因为新行插入到开头会影响所有行的序号）
+                updateRowIndexes();
+    
+                // 保持滚动位置在顶部（可选）
+                parsedDataBody.parentElement.scrollTop = 0;
+            }
+
+            // 新增函数：更新所有行的序号
+            function updateRowIndexes() {
+                const rows = parsedDataBody.querySelectorAll('tr');
+                rows.forEach((row, index) => {
+                    row.cells[0].textContent = rows.length - index; // 或者 index + 1，取决于你想要的序号顺序
+                });
+            }
+
+           
+
+         
+
+        
+            // 清空解析数据
+            clearParsedBtn.addEventListener('click', function() {
+                parsedDataBody.innerHTML = '';
+                dataHistory = [];
+                lastTimestamp = null;
+                dataLists=[];
+                console.log(dataLists);
+                idcount=1;
+                console.log('已清空解析数据');
+            });
+
+           
+            
+            // 页面卸载时断开连接
+            window.addEventListener('beforeunload', function() {
+                if (isConnected && port) {
+                    console.log('页面关闭，正在断开连接...');
+                    isReading = false;
+                    
+                    if (reader) {
+                        reader.cancel().catch(() => {});
+                    }
+                    
+                    if (port) {
+                        port.close().catch(() => {});
+                    }
+                }
+            });
+
+            
+            
+    
+        function getCurrentTime() {
+            const now = new Date();
+            
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+        }
+        let intervalId = null;
+        let isRunning = false;
+         startTimer()
+        // 启动定时器
+        function startTimer() {
+            if (!isRunning) {
+                intervalId = setInterval(InterSpeakText, 500);
+                isRunning = true;
+                console.log('定时器已启动');
+            }
+        }
+
+        // 暂停定时器
+        function pauseTimer() {
+            if (isRunning) {
+                clearInterval(intervalId);
+                intervalId = null;
+                isRunning = false;
+                console.log('定时器已暂停');
+            }
+        }
+        var idcount=0;
+        var t;
+        function InterSpeakText() { 
+            if(speechSynthesis.speaking)return;
+
+            if(dataHistory.length>idcount){
+                pauseTimer();
+                for(i=idcount;dataHistory.length>i;i++){  
+                               
+                    t=dataLists[i];                   
+                    idcount=i; 
+                    
+                    
+                    setTimeout(() => {
+                    speakText(t.name+" "+parseFloat(t.sec).toFixed(2));   
+                    }, 500);
+                   
+                   console.log(t.name+" "+parseFloat(t.sec).toFixed(2));            
+                }
+                idcount++;
+                startTimer();
+            }
+            //console.log('定时执行的任务:'+idcount);
+            // 你的代码...
+        }
+
+     
+        function speakText(text) {
+            if (text === '') {
+                alert('請輸入一些文字！');
+                return;
+            }
+            
+            // 使用瀏覽器的語音合成 API
+            if ('speechSynthesis' in window) {
+                // 停止任何正在進行的語音
+                window.speechSynthesis.cancel();
+                
+                // 創建新的語音實例
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // 設置語音屬性
+               // utterance.lang = 'zh-TW';
+                utterance.rate = 1;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                // 播放語音
+                window.speechSynthesis.speak(utterance);
+             
+            } else {
+                alert('抱歉，您的瀏覽器不支援語音合成功能！');
+            }
+        }
+        let audioContext;
+        let isPlaying = false;
+        // 初始化音频上下文
+        function initAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+        function playBeep() {
+            if (isPlaying) return;
+            
+            initAudioContext();
+           
+            
+            // 创建振荡器
+            const oscillator = audioContext.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 800; // 1kHz
+            
+            // 创建增益节点
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 0.5;
+
+            
+            
+            // 连接节点
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // 播放声音
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.3); // 0.5秒后停止
+            
+           
+            
+            // 声音播放结束后重置状态
+            oscillator.onended = function() {
+                isPlaying = false;               
+            };
+        }
+        
+    </script><div id="goog-gt-tt" class="VIpgJd-yAWNEb-L7lbkb skiptranslate" style="border-radius: 12px; margin: 0 0 0 -23px; padding: 0; font-family: &#39;Google Sans&#39;, Arial, sans-serif;" data-id=""><div id="goog-gt-vt" class="VIpgJd-yAWNEb-hvhgNd"><div class="VIpgJd-yAWNEb-hvhgNd-Ud7fr"><img src="./RC Loop Speed(tw)_files/24px.svg" width="24" height="24" alt=""><div class=" VIpgJd-yAWNEb-hvhgNd-IuizWc-i3jM8c " dir="ltr">原文</div></div><div class="VIpgJd-yAWNEb-hvhgNd-k77Iif"><div id="goog-gt-original-text" class="VIpgJd-yAWNEb-nVMfcd-fmcmS VIpgJd-yAWNEb-hvhgNd-axAV1"></div></div><div class="VIpgJd-yAWNEb-hvhgNd-N7Eqid ltr"><div class="VIpgJd-yAWNEb-hvhgNd-N7Eqid-B7I4Od ltr" dir="ltr"><div class="VIpgJd-yAWNEb-hvhgNd-UTujCb">為這個翻譯評分</div><div class="VIpgJd-yAWNEb-hvhgNd-eO9mKe">你的意見回饋將用於協助改善 Google 翻譯品質</div></div><div class="VIpgJd-yAWNEb-hvhgNd-xgov5 ltr"><button id="goog-gt-thumbUpButton" type="button" class="VIpgJd-yAWNEb-hvhgNd-bgm6sf" title="譯文品質良好" aria-label="譯文品質良好" aria-pressed="false"><span id="goog-gt-thumbUpIcon"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="VIpgJd-yAWNEb-hvhgNd-THI6Vb NMm5M"><path d="M21 7h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 0S7.08 6.85 7 7H2v13h16c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73V9c0-1.1-.9-2-2-2zM7 18H4V9h3v9zm14-7l-3 7H9V8l4.34-4.34L12 9h9v2z"></path></svg></span><span id="goog-gt-thumbUpIconFilled"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="VIpgJd-yAWNEb-hvhgNd-THI6Vb NMm5M"><path d="M21 7h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 0S7.08 6.85 7 7v13h11c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73V9c0-1.1-.9-2-2-2zM5 7H1v13h4V7z"></path></svg></span></button><button id="goog-gt-thumbDownButton" type="button" class="VIpgJd-yAWNEb-hvhgNd-bgm6sf" title="譯文品質不佳" aria-label="譯文品質不佳" aria-pressed="false"><span id="goog-gt-thumbDownIcon"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="VIpgJd-yAWNEb-hvhgNd-THI6Vb NMm5M"><path d="M3 17h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 24s7.09-6.85 7.17-7h5V4H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2zM17 6h3v9h-3V6zM3 13l3-7h9v10l-4.34 4.34L12 15H3v-2z"></path></svg></span><span id="goog-gt-thumbDownIconFilled"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="VIpgJd-yAWNEb-hvhgNd-THI6Vb NMm5M"><path d="M3 17h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 24s7.09-6.85 7.17-7V4H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2zm16 0h4V4h-4v13z"></path></svg></span></button></div></div><div id="goog-gt-votingHiddenPane" class="VIpgJd-yAWNEb-hvhgNd-aXYTce"><form id="goog-gt-votingForm" action="https://translate.googleapis.com/translate_voting?client=te_lib" method="post" target="votingFrame" class="VIpgJd-yAWNEb-hvhgNd-aXYTce"><input type="text" name="sl" id="goog-gt-votingInputSrcLang"><input type="text" name="tl" id="goog-gt-votingInputTrgLang"><input type="text" name="query" id="goog-gt-votingInputSrcText"><input type="text" name="gtrans" id="goog-gt-votingInputTrgText"><input type="text" name="vote" id="goog-gt-votingInputVote"></form><iframe name="votingFrame" frameborder="0" src="./RC Loop Speed(tw)_files/saved_resource.html"></iframe></div></div></div>
+
+
+</body><link rel="stylesheet" asset="eduser.css" href="chrome-extension://mjdbhokoopacimoekfgkcoogikbfgngb/assets/eduser.css"></html>
