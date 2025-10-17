@@ -903,15 +903,27 @@
         }
 
         // Show status message
-        function showStatus(message, type) {
-            statusMessage.textContent = message;
-            statusMessage.className = 'status ' + type;
-            statusMessage.style.display = 'block';
-            
-            // Auto hide after 3 seconds
-            setTimeout(() => {
-                statusMessage.style.display = 'none';
-            }, 3000);
+        function showStatus(message, type, isModal = false) { 
+            const targetElement = isModal ? statusMessage : statusArea;     
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+            targetElement.innerHTML = '';
+            targetElement.appendChild(statusDiv);
+        
+            if (type !== 'error') {
+                setTimeout(() => {
+                    if (statusDiv.parentElement) {
+                        statusDiv.style.opacity = '0';
+                        statusDiv.style.transition = 'opacity 0.5s';
+                        setTimeout(() => {
+                            if (statusDiv.parentElement) {
+                                statusDiv.remove();
+                            }
+                        }, 500);
+                    }
+                }, 3000);
+            }
         }
 
         // Update connection status display
