@@ -18,15 +18,19 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            font-family: 'Microsoft JhengHei', 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
             padding: 20px;
             color: #333;
             line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         
         .container {
@@ -35,6 +39,7 @@
             padding: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             max-width: 1000px;
+            width: 100%;
             margin: 0 auto;
         }
         
@@ -347,47 +352,6 @@
         .simple-btn:hover {
             background: #2980b9;
         }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 800px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 30px;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
         
         .description {
             font-size: 1.1rem;
@@ -400,65 +364,6 @@
             margin: 40px 0;
         }
         
-        .btn {
-            display: inline-block;
-            padding: 15px 30px;
-            background-color: #2575fc;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .btn:hover {
-            background-color: #1a68e8;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-        
-        .btn-danger {
-            background-color: #ff4757;
-        }
-        
-        .btn-danger:hover {
-            background-color: #ff3742;
-        }
-        
-        .btn-success {
-            background-color: #2ed573;
-        }
-        
-        .btn-success:hover {
-            background-color: #25c768;
-        }
-        
-        .status {
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            display: none;
-            max-width: 600px;
-            margin: 0 auto 20px;
-        }
-        
-        .status.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            display: block;
-        }
-        
-        .status.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-            display: block;
-        }
-        
         footer {
             text-align: center;
             margin-top: 40px;
@@ -467,7 +372,7 @@
             font-size: 0.9rem;
         }
         
-        /* 弹窗样式 */
+        /* 彈窗樣式 */
         .modal {
             display: none;
             position: fixed;
@@ -536,13 +441,6 @@
         .form-group {
             margin-bottom: 20px;
             text-align: left;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #444;
         }
         
         input {
@@ -652,7 +550,7 @@
 <body>
     <div class="container">
         <header>
-            <h8>🔵 RC Loops Speed</h8>
+            <h1>🔵 RC Loops Speed</h1>
         </header>
         
         <div class="card">
@@ -672,27 +570,22 @@
             </div>
         </div>
 
-       
-
-       
-
         <div class="card">
-            <h3><span class="icon">🔍</span> 圈速 </h3>
+            <h3><span class="icon">🔍</span> 圈速</h3>
            
             <div class="parsed-data-container">
                 <table class="parsed-data-table" id="parsed-data-table">
                     <thead>
                         <tr>
-                            <th>序号</th>                           
+                            <th>序號</th>                           
                             <th>ID</th>
-                            <th>Name</th>
-                            <th>秒</th>
-                            <th>NOW TIME</th>
-
+                            <th>姓名</th>
+                            <th>秒數</th>
+                            <th>現在時間</th>
                         </tr>
                     </thead>
                     <tbody id="parsed-data-body">
-                        <!-- 解析后的数据将在这里显示 -->
+                        <!-- 解析後的資料將在這裡顯示 -->
                     </tbody>
                 </table>
             </div>
@@ -701,22 +594,23 @@
                 <button class="btn btn-warning" id="clear-parsed-btn">🗑️ 清空圈速紀錄</button>
             </div>
         </div>
+        
         <div class="status" id="statusMessage"></div>
         
         <div class="main-action">
-            <button class="btn" id="editUsersBtn">编辑用户</button>
+            <button class="btn" id="editUsersBtn">編輯使用者</button>
         </div>
+        
         <div class="card">
-           
             <div id="status-area"></div>
-            
         </div>
     </div>
- <!-- 编辑用户弹窗 -->
+    
+    <!-- 編輯使用者彈窗 -->
     <div class="modal" id="editModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">用户管理</h3>
+                <h3 class="modal-title">使用者管理</h3>
                 <button class="close-btn" id="closeModal">&times;</button>
             </div>
             <div class="modal-body">
@@ -727,9 +621,9 @@
                     </div>
                     <div class="form-group">
                         <label for="userName">姓名</label>
-                        <input type="text" id="userName" placeholder="输入用户名">
+                        <input type="text" id="userName" placeholder="輸入使用者名稱">
                     </div>
-                    <button class="btn btn-success" id="addUserBtn">添加用户</button>
+                    <button class="btn btn-success" id="addUserBtn">新增使用者</button>
                 </div>
                 
                 <div id="usersTableContainer">
@@ -742,183 +636,152 @@
                             </tr>
                         </thead>
                         <tbody id="usersTableBody">
-                            <!-- 用户数据将在这里动态生成 -->
+                            <!-- 使用者資料將在這裡動態產生 -->
                         </tbody>
                     </table>
                     <div id="emptyState" class="empty-state">
                         <i>📊</i>
-                        <p>暂无用户数据，请添加用户</p>
+                        <p>暫無使用者資料，請新增使用者</p>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn" id="closeModalBtn">关闭</button>
+                <button class="btn" id="closeModalBtn">關閉</button>
             </div>
         </div>
     </div>
     
     <script>
+        // 全域變數
+        let port = null;
+        let reader = null;
+        let isConnected = false;
+        let isReading = false;
+        let dataLists = [];
+        let dataHistory = [];
+        let lastTimestamp = null;
+        let db;
+        const dbName = "UserDB";
+        const dbVersion = 1;
+        const storeName = "users";
         
-        function encodeTransponderFull(transponderNumber, statusBits, lastByte) {
-            const TRANSPONDER_PACKET_LENGTH = 12;
-            const POLY = 0x0000776107n; // 使用 BigInt 表示多項式
-            
-            let retValue = new Array(TRANSPONDER_PACKET_LENGTH).fill(0);
-            
-            // 將 lastByte 添加到 transponderNumber 中
-            transponderNumber = BigInt(transponderNumber) | (BigInt(lastByte) << 24n);
-            
-            let fflop = 0n, temp = 0n, temp1;
-            let i, j = 0;
-    
-            // 第一階段：處理 transponderNumber 和 statusBits
-            for (i = 0; i < 40; i++) {
-                temp <<= 1n;
-                if (j < 3) {
-                    // 這不是狀態位
-                    temp |= (transponderNumber & 0x20000000n) >> 29n;
-                    transponderNumber <<= 1n;
-                } else {
-                    // 這是狀態位
-                    temp |= (BigInt(statusBits) & 0x0200n) >> 9n;
-                    statusBits = Number(BigInt(statusBits) << 1n); // 轉回 Number 以便後續使用
-                }
-                j = (j < 3) ? j + 1 : 0;
-            }
-    
-            j = 0;
-            let k = 2;
-            
-            fflop |= (temp & 0x01n);
-            temp >>= 1n;
-    
-            // 第二階段：計算 CRC 並填充輸出數組
-            for (i = 0; i < 40; i++) {
-                let bit_in = temp & 0x01n;
-                
-                // 計算奇偶校驗（流中1的數量）
-                temp1 = fflop & POLY;
-                temp1 ^= temp1 >> 1n;
-                temp1 ^= temp1 >> 2n;
-                temp1 = (temp1 & 0x1111111111111111n) * 0x1111111111111111n;
-                temp1 = (temp1 >> 60n) & 0x01n;
-                
-                if (k >= TRANSPONDER_PACKET_LENGTH) {
-                    // 錯誤情況
-                    break;
-                }
+        // DOM 元素
+        const connectBtn = document.getElementById('connect-btn');
+        const clearParsedBtn = document.getElementById('clear-parsed-btn');
+        const editUsersBtn = document.getElementById('editUsersBtn');
+        const deviceInfo = document.getElementById('device-info');
+        const statusArea = document.getElementById('status-area');
+        const statusMessage = document.getElementById('statusMessage');
+        const statusIndicator = document.getElementById('status-indicator');
+        const connectionText = document.getElementById('connection-text');
+        const parsedDataBody = document.getElementById('parsed-data-body');
         
-                // 移位並設置輸出字節的位
-                retValue[k] <<= 1;
-                retValue[k] |= Number(temp1 ^ bit_in);
-                retValue[k] <<= 1;
-                retValue[k] |= Number(temp1 ^ bit_in ^ (fflop & 0x01n));
-                
-                if (j < 3) {
-                    j++;
-                } else {
-                    // 每4位一個新字節
-                    j = 0;
-                    k++;
-                }
-                
-                temp >>= 1n;
-                fflop <<= 1n;
-                fflop |= bit_in;
-            }
-    
-            // 設置頭部字節
-            retValue[0] = 0xF9;
-            retValue[1] = 0x16;
-            
-            return retValue;
-        }
-        //let result = encodeTransponderFull(4747731, 0, 0);
-        //alert(result);
-        /**
-         * Decodes a RC3 transponder packet (filled with preamble)
-         * @param {number[]} telegram - The telegram byte array (must be length 12)
-         * @returns {number} The decoded transponder number
-         */
-        function decodeRC3Telegram(telegram) {
-            const TRANSPONDER_PACKET_LENGTH = 12;
-            
-            if (!telegram || telegram.length !== TRANSPONDER_PACKET_LENGTH) {
-                throw new Error("Wrong telegram size");
-            }
-
-            let decoded = 0;
-            
-            // Process all bytes in reverse order except preamble (indices 0-1)
-            for (let k = TRANSPONDER_PACKET_LENGTH - 1; k >= 2; k--) {
-                let digit = telegram[k];
-                
-                // Process 3 pairs of bits from each byte
-                for (let b = 0; b < 3; b++) {
-                    decoded <<= 1;
-                    
-                    // Check if the 2-bit pattern is 0x01 or 0x02
-                    if ((digit & 0x03) === 0x01 || (digit & 0x03) === 0x02) {
-                        decoded |= 1;
-                    }
-                    
-                    digit >>= 2; // Move to the next 2-bit pair
-                }
-            }
-            
-            return decoded >>> 0; // Ensure unsigned 32-bit result
-        }
-        const telegram = [0xF9,0x16,0xD4,0xFB,0x26,0x30,0x16,0x03,0x08,0x34,0xFF,0x0C];
-        const decodedNumber = decodeRC3Telegram(telegram);
-        console.log("Decoded transponder number:", decodedNumber);
-// 使用示例
-// let result = encodeTransponderFull(123456, 0x1FF, 0xAB);
-// console.log(result);
- // DOM 元素
-            const connectBtn = document.getElementById('connect-btn');
-            const sendBtn = document.getElementById('send-btn');
-            const clearSendBtn = document.getElementById('clear-send-btn');
-            const clearReceiveBtn = document.getElementById('clear-receive-btn');
-            const clearParsedBtn = document.getElementById('clear-parsed-btn');
-           
-            
-            const deviceInfo = document.getElementById('device-info');
-            const sendData = document.getElementById('send-data');
-            const receiveData = document.getElementById('receive-data');
-            const statusArea = document.getElementById('status-area');
-            const logArea = document.getElementById('log-area');
-            const statusIndicator = document.getElementById('status-indicator');
-            const connectionText = document.getElementById('connection-text');
-            const parsedDataBody = document.getElementById('parsed-data-body');
-
-             // DOM元素
-            const editUsersBtn = document.getElementById('editUsersBtn');
-            const statusMessage = document.getElementById('statusMessage');
-            
-            // 弹窗相关元素
-            const editModal = document.getElementById('editModal');
-            const closeModalBtn = document.getElementById('closeModal');
-            const closeModalBtn2 = document.getElementById('closeModalBtn');
-            const usersTableBody = document.getElementById('usersTableBody');
-            const emptyState = document.getElementById('emptyState');
-            const userIdInput = document.getElementById('userId');
-            const userNameInput = document.getElementById('userName');
-            const addUserBtn = document.getElementById('addUserBtn');
-        // 简化版代码 - 专注于解决连接问题
+        // 彈窗相關元素
+        const editModal = document.getElementById('editModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const closeModalBtn2 = document.getElementById('closeModalBtn');
+        const usersTableBody = document.getElementById('usersTableBody');
+        const emptyState = document.getElementById('emptyState');
+        const userIdInput = document.getElementById('userId');
+        const userNameInput = document.getElementById('userName');
+        const addUserBtn = document.getElementById('addUserBtn');
+        
+        // 初始化
         document.addEventListener('DOMContentLoaded', function() {
-            // 初始化
             init();
-            setupEventListeners() ;
+            setupEventListeners();
         });
-        //----------------
-             // 设置事件监听器
+        
+        // 初始化系統
+        function init() {
+            console.log('系統初始化開始...');
+            
+            // 檢查瀏覽器支援
+            if (!('serial' in navigator)) {
+                showStatus('❌ 您的瀏覽器不支援 Web Serial API', 'error');
+                connectBtn.disabled = true;
+                console.log('錯誤: 瀏覽器不支援 Web Serial API');
+                return;
+            }
+            
+            console.log('✅ Web Serial API 支援正常');
+            
+            // 檢查是否在安全上下文中
+            if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+                showStatus('⚠️ 建議在 HTTPS 或 localhost 環境下使用', 'warning');
+                console.log('警告: 當前環境非 HTTPS 或 localhost');
+            } else {
+                console.log('✅ 當前環境安全 (HTTPS 或 localhost)');
+            }
+            
+            showStatus('請點擊"連接設備"按鈕選擇您的設備', 'info');
+            console.log('系統初始化完成，等待使用者操作');
+            
+            initDB();
+        }
+        
+        // 設定事件監聽器
         function setupEventListeners() {
-            // 打开编辑弹窗
+            // 連接按鈕
+            connectBtn.addEventListener('click', function() {
+                console.log('使用者點擊了連接按鈕');
+                
+                if (!('serial' in navigator)) {
+                    showStatus('❌ 瀏覽器不支援 Web Serial API', 'error');
+                    return;
+                }
+                
+                updateConnectionStatus('connecting', '連接中...');
+                showStatus('正在請求設備權限...', 'info');
+                
+                // 直接請求設備
+                navigator.serial.requestPort()
+                    .then(selectedPort => {
+                        console.log('設備選擇對話框已彈出，使用者選擇了設備');
+                        port = selectedPort;
+                        return connectToPort(port);
+                    })
+                    .then(() => {
+                        console.log('設備連接成功');
+                        showStatus('✅ 設備連接成功！', 'success');
+                        updateConnectionStatus('connected', '已連接');
+                        isConnected = true;
+                        
+                        // 開始讀取資料
+                        startReading();
+                    })
+                    .catch(error => {
+                        console.log(`連接過程中出錯: ${error.message}`);
+                        
+                        if (error.name === 'NotFoundError') {
+                            showStatus('未選擇設備或未找到可用設備', 'info');
+                        } else {
+                            showStatus(`❌ 連接失敗: ${error.message}`, 'error');
+                        }
+                        
+                        updateConnectionStatus('disconnected', '連接失敗');
+                        isConnected = false;
+                        connectBtn.disabled = false;
+                    });
+            });
+            
+            // 清空解析資料
+            clearParsedBtn.addEventListener('click', function() {
+                parsedDataBody.innerHTML = '';
+                dataHistory = [];
+                lastTimestamp = null;
+                dataLists = [];
+                console.log(dataLists);
+                idcount = 1;
+                console.log('已清空解析資料');
+            });
+            
+            // 開啟編輯彈窗
             editUsersBtn.addEventListener('click', function() {
                 openEditModal();
             });    
         
-            // 关闭弹窗
+            // 關閉彈窗
             closeModalBtn.addEventListener('click', function() {
                 closeModal();
             });
@@ -927,12 +790,12 @@
                 closeModal();
             });
             
-            // 添加用户
+            // 新增使用者
             addUserBtn.addEventListener('click', function() {
                 addUser();
             });
             
-            // 按Enter键添加用户
+            // 按Enter鍵新增使用者
             userNameInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     addUser();
@@ -945,79 +808,77 @@
                 }
             });
             
-            // 点击弹窗外部关闭
+            // 點擊彈窗外部關閉
             editModal.addEventListener('click', function(e) {
                 if (e.target === editModal) {
                     closeModal();
                 }
             });
-        }
-
-        // 打开编辑弹窗
-        function openEditModal() {
-            editModal.style.display = 'flex';
-            loadAllUsers();
-        }
-
-        // 关闭弹窗
-        function closeModal() {
-            editModal.style.display = 'none';
-            userIdInput.value = '';
-            userNameInput.value = '';
-        }
-
-        // 添加用户
-        function addUser() {
             
-            const id = parseInt(userIdInput.value);
-            const name = userNameInput.value.trim();
-            
-            if (!id || id <= 0) {
-                showStatus('错误: 请输入有效的ID（正整数）', 'error');
-                return;
-            }
-            
-            if (!name) {
-                showStatus('错误: 请输入用户名', 'error');
-                return;
-            }
-            
-            const user = { id: id, name: name };
-            
-            const transaction = db.transaction([storeName], 'readwrite');
-            const objectStore = transaction.objectStore(storeName);
-            
-            // 先检查ID是否已存在
-            const checkRequest = objectStore.get(id);
-            
-            checkRequest.onsuccess = function() {
-                if (checkRequest.result) {
-                    showStatus('错误: ID已存在，请使用其他ID', 'error');
-                    return;
+            // 頁面卸載時斷開連接
+            window.addEventListener('beforeunload', function() {
+                if (isConnected && port) {
+                    console.log('頁面關閉，正在斷開連接...');
+                    isReading = false;
+                    
+                    if (reader) {
+                        reader.cancel().catch(() => {});
+                    }
+                    
+                    if (port) {
+                        port.close().catch(() => {});
+                    }
                 }
-                
-                // ID不存在，可以添加用户
-                const addRequest = objectStore.add(user);
-                addRequest.onsuccess = function() {
-                    showStatus(`用户 "${name}" (ID: ${id}) 添加成功`, 'success');
-                    userIdInput.value = '';
-                    userNameInput.value = '';
-                    loadAllUsers();
-                };
-                
-                addRequest.onerror = function() {
-                    showStatus('错误: 无法添加用户', 'error');
-                };
+            });
+        }
+        
+        // 初始化資料庫
+        function initDB() {
+            const request = indexedDB.open(dbName, dbVersion);
+            
+            request.onerror = function(event) {
+                showStatus("無法開啟資料庫: " + event.target.errorCode, 'error');
             };
             
-            checkRequest.onerror = function() {
-                showStatus('错误: 无法检查ID是否存在', 'error');
+            request.onsuccess = function(event) {
+                db = event.target.result;
+                showStatus("資料庫已成功開啟", 'success');
+                loadAllUsers();
+            };
+            
+            request.onupgradeneeded = function(event) {
+                db = event.target.result;
+                
+                // 建立物件儲存空間（類似於表）
+                if (!db.objectStoreNames.contains(storeName)) {
+                    const objectStore = db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
+                    
+                    // 建立索引
+                    objectStore.createIndex('name', 'name', { unique: false });
+                    objectStore.createIndex('id', 'id', { unique: true });
+                    
+                    showStatus("資料庫已建立/升級", 'success');
+                }
             };
         }
-
-       
-
-        // 显示用户列表
+        
+        // 載入所有使用者
+        function loadAllUsers() {
+            const transaction = db.transaction([storeName], 'readonly');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.getAll();
+            
+            request.onsuccess = function() {
+                const users = request.result;
+                displayUsers(users);
+            };
+            
+            request.onerror = function() {
+                showStatus('錯誤: 無法載入使用者資料', 'error');
+            };
+        }
+        
+        // 顯示使用者列表
         function displayUsers(users) {
             usersTableBody.innerHTML = '';
             
@@ -1038,16 +899,78 @@
                     <td>${user.id}</td>
                     <td>${user.name}</td>
                     <td class="actions">
-                        <button class="action-btn edit-btn" onclick="editUser(${user.id})">编辑</button>
-                        <button class="action-btn delete-btn" onclick="deleteUser(${user.id})">删除</button>
+                        <button class="action-btn edit-btn" onclick="editUser(${user.id})">編輯</button>
+                        <button class="action-btn delete-btn" onclick="deleteUser(${user.id})">刪除</button>
                     </td>
                 `;
                 
                 usersTableBody.appendChild(row);
             });
         }
+        
+        // 開啟編輯彈窗
+        function openEditModal() {
+            editModal.style.display = 'flex';
+            loadAllUsers();
+        }
 
-        // 编辑用户
+        // 關閉彈窗
+        function closeModal() {
+            editModal.style.display = 'none';
+            userIdInput.value = '';
+            userNameInput.value = '';
+        }
+
+        // 新增使用者
+        function addUser() {
+            const id = parseInt(userIdInput.value);
+            const name = userNameInput.value.trim();
+            
+            if (!id || id <= 0) {
+                showStatus('錯誤: 請輸入有效的ID（正整數）', 'error');
+                return;
+            }
+            
+            if (!name) {
+                showStatus('錯誤: 請輸入使用者名稱', 'error');
+                return;
+            }
+            
+            const user = { id: id, name: name };
+            
+            const transaction = db.transaction([storeName], 'readwrite');
+            const objectStore = transaction.objectStore(storeName);
+            
+            // 先檢查ID是否已存在
+            const checkRequest = objectStore.get(id);
+            
+            checkRequest.onsuccess = function() {
+                if (checkRequest.result) {
+                    showStatus('錯誤: ID已存在，請使用其他ID', 'error');
+                    return;
+                }
+                
+                // ID不存在，可以新增使用者
+                const addRequest = objectStore.add(user);
+                
+                addRequest.onsuccess = function() {
+                    showStatus(`使用者 "${name}" (ID: ${id}) 新增成功`, 'success');
+                    userIdInput.value = '';
+                    userNameInput.value = '';
+                    loadAllUsers();
+                };
+                
+                addRequest.onerror = function() {
+                    showStatus('錯誤: 無法新增使用者', 'error');
+                };
+            };
+            
+            checkRequest.onerror = function() {
+                showStatus('錯誤: 無法檢查ID是否存在', 'error');
+            };
+        }
+
+        // 編輯使用者
         function editUser(id) {
             const transaction = db.transaction([storeName], 'readonly');
             const objectStore = transaction.objectStore(storeName);
@@ -1056,7 +979,7 @@
             request.onsuccess = function() {
                 const user = request.result;
                 if (user) {
-                    const newName = prompt(`编辑用户 "${user.name}"：`, user.name);
+                    const newName = prompt(`編輯使用者 "${user.name}"：`, user.name);
                     
                     if (newName !== null && newName.trim() !== '') {
                         updateUser(id, newName.trim());
@@ -1065,11 +988,11 @@
             };
             
             request.onerror = function() {
-                showStatus('错误: 无法加载用户数据', 'error');
+                showStatus('錯誤: 無法載入使用者資料', 'error');
             };
         }
 
-        // 更新用户
+        // 更新使用者
         function updateUser(id, newName) {
             const user = { id: id, name: newName };
             
@@ -1078,16 +1001,16 @@
             const request = objectStore.put(user);
             
             request.onsuccess = function() {
-                showStatus('用户信息已更新', 'success');
+                showStatus('使用者資訊已更新', 'success');
                 loadAllUsers();
             };
             
             request.onerror = function() {
-                showStatus('错误: 无法更新用户信息', 'error');
+                showStatus('錯誤: 無法更新使用者資訊', 'error');
             };
         }
 
-        // 删除用户
+        // 刪除使用者
         function deleteUser(id) {
             const transaction = db.transaction([storeName], 'readonly');
             const objectStore = transaction.objectStore(storeName);
@@ -1095,131 +1018,33 @@
             
             request.onsuccess = function() {
                 const user = request.result;
-                if (user && confirm(`确定要删除用户 "${user.name}" (ID: ${user.id}) 吗？`)) {
+                if (user && confirm(`確定要刪除使用者 "${user.name}" (ID: ${user.id}) 嗎？`)) {
                     deleteUserById(id);
                 }
             };
         }
 
-        // 执行删除操作
+        // 執行刪除操作
         function deleteUserById(id) {
             const transaction = db.transaction([storeName], 'readwrite');
             const objectStore = transaction.objectStore(storeName);
             const request = objectStore.delete(id);
             
             request.onsuccess = function() {
-                showStatus('用户已删除', 'success');
+                showStatus('使用者已刪除', 'success');
                 loadAllUsers();
             };
             
             request.onerror = function() {
-                showStatus('错误: 无法删除用户', 'error');
+                showStatus('錯誤: 無法刪除使用者', 'error');
             };
         }
-
-        // 显示状态消息
-        function showStatus(message, type) {
-            statusMessage.textContent = message;
-            statusMessage.className = 'status ' + type;
-            
-            // 3秒后自动隐藏
-            setTimeout(() => {
-                statusMessage.style.display = 'none';
-            }, 3000);
-        }
-        //----------------
         
-            // 全局变量
-            let port = null;
-            let reader = null;
-            let isConnected = false;
-            let isReading = false;
-            let dataLists=[];
-            // 数据存储
-            let dataHistory = [];
-            let lastTimestamp = null;
-            //
-            let db;
-            const dbName = "UserDB";
-            const dbVersion = 1;
-            const storeName = "users";
-
-            // 初始化
-            function init() {
-                console.log('系统初始化开始...');
-                
-                // 检查浏览器支持
-                if (!('serial' in navigator)) {
-                    showStatus('❌ 您的浏览器不支持 Web Serial API', 'error');
-                    connectBtn.disabled = true;
-                    console.log('错误: 浏览器不支持 Web Serial API');
-                    return;
-                }
-                
-                console.log('✅ Web Serial API 支持正常');
-                
-                // 检查是否在安全上下文中
-                if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-                    showStatus('⚠️ 建议在 HTTPS 或 localhost 环境下使用', 'warning');
-                    console.log('警告: 当前环境非 HTTPS 或 localhost');
-                } else {
-                    console.log('✅ 当前环境安全 (HTTPS 或 localhost)');
-                }
-                
-                showStatus('请点击"连接设备"按钮选择您的设备', 'info');
-                console.log('系统初始化完成，等待用户操作');
-                 initDB();
-                 setupEventListeners();
-                 
-            }
-            // 初始化数据库
-            function initDB() {
-                const request = indexedDB.open(dbName, dbVersion);
-            
-                request.onerror = function(event) {
-                    showStatus("无法打开数据库: " + event.target.errorCode, 'error');
-                };
-            
-                request.onsuccess = function(event) {
-                    db = event.target.result;
-                    showStatus("数据库已成功打开", 'success');
-                    loadAllUsers();
-                };
-            
-                request.onupgradeneeded = function(event) {
-                    db = event.target.result;
-                
-                    // 创建对象存储空间（类似于表）
-                    if (!db.objectStoreNames.contains(storeName)) {
-                        const objectStore = db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
-                    
-                        // 创建索引
-                        objectStore.createIndex('name', 'name', { unique: false });
-                        objectStore.createIndex('id', 'id', { unique: true });
-                    
-                        showStatus("数据库已创建/升级", 'success');
-                    }
-                };
-            }
-            // 加载所有用户
-            function loadAllUsers() {
-                const transaction = db.transaction([storeName], 'readonly');
-                const objectStore = transaction.objectStore(storeName);
-                const request = objectStore.getAll();
-                request.onsuccess = function() {
-                    const users = request.result;
-                    displayUsers(users);
-                };
-            
-                request.onerror = function() {
-                    showStatus('错误: 无法加载用户数据', 'error');
-                };
-            }
-            // 根据ID获取用户姓名的函数
+        // 根據ID取得使用者姓名的函數
         function getUserNameById(id) {
             return new Promise((resolve, reject) => {
                 if (!db) {
-                    reject(new Error('数据库未初始化'));
+                    reject(new Error('資料庫未初始化'));
                     return;
                 }
                 
@@ -1236,250 +1061,193 @@
                 };
                 
                 request.onerror = function() {
-                    reject(new Error('查询失败'));
+                    reject(new Error('查詢失敗'));
                 };
             });
         }
-
-            // 更新连接状态显示
-            function updateConnectionStatus(status, text) {
-                statusIndicator.className = 'status-indicator ' + status;
-                connectionText.textContent = text;
-            }
-
+        
+        // 更新連接狀態顯示
+        function updateConnectionStatus(status, text) {
+            statusIndicator.className = 'status-indicator ' + status;
+            connectionText.textContent = text;
+        }
+        
+        // 顯示狀態訊息
+        function showStatus(message, type, isModal = false) {
+            // 如果是模態框的狀態訊息，使用 statusMessage 元素
+            const targetElement = isModal ? statusMessage : statusArea;
             
-
-            function showStatus(message, type, isModal = false) {
-                // 如果是模態框的狀態消息，使用 statusMessage 元素
-                const targetElement = isModal ? statusMessage : statusArea;
-                
-                // 創建狀態消息元素
-                const statusDiv = document.createElement('div');
-                statusDiv.className = `status ${type}`;
-                statusDiv.textContent = message;
-                
-                // 清除之前的狀態消息
-                targetElement.innerHTML = '';
-                targetElement.appendChild(statusDiv);
-                
-                // 如果不是錯誤類型的消息，3秒後自動隱藏
-                if (type !== 'error') {
-                    setTimeout(() => {
-                        if (statusDiv.parentElement) {
-                            statusDiv.style.opacity = '0';
-                            statusDiv.style.transition = 'opacity 0.5s';
-                            setTimeout(() => {
-                                if (statusDiv.parentElement) {
-                                    statusDiv.remove();
-                                }
-                            }, 500);
-                        }
-                    }, 3000);
-                }
+            // 建立狀態訊息元素
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+            
+            // 清除之前的狀態訊息
+            targetElement.innerHTML = '';
+            targetElement.appendChild(statusDiv);
+            
+            // 如果不是錯誤類型的訊息，3秒後自動隱藏
+            if (type !== 'error') {
+                setTimeout(() => {
+                    if (statusDiv.parentElement) {
+                        statusDiv.style.opacity = '0';
+                        statusDiv.style.transition = 'opacity 0.5s';
+                        setTimeout(() => {
+                            if (statusDiv.parentElement) {
+                                statusDiv.remove();
+                            }
+                        }, 500);
+                    }
+                }, 3000);
             }
-            // 连接设备 - 简化版本
-            connectBtn.addEventListener('click', function() {
-                console.log('用户点击了连接按钮');
+        }
+        
+        // 連接到端口
+        function connectToPort(port) {
+            console.log('開始配置並連接端口...');
+            
+            // 取得配置參數
+            const baudRate = "57600";
+            const dataBits = "8";
+            const stopBits = "1";
+            const parity = "none";
+            
+            console.log(`使用配置: ${baudRate} baud, ${dataBits} data bits, ${stopBits} stop bits, ${parity} parity`);
+            
+            // 開啟端口
+            return port.open({
+                baudRate: baudRate,
+                dataBits: dataBits,
+                stopBits: stopBits,
+                parity: parity,
+                flowControl: 'none'
+            }).then(() => {
+                console.log('端口開啟成功');
                 
-                if (!('serial' in navigator)) {
-                    showStatus('❌ 浏览器不支持 Web Serial API', 'error');
-                    return;
-                }
+                const info = port.getInfo();
+                let deviceDetails = ` <strong>狀態:</strong> ✅ 已連接`;                  
                 
-                updateConnectionStatus('connecting', '连接中...');
-                showStatus('正在请求设备权限...', 'info');
-                
-                // 直接请求设备
-                navigator.serial.requestPort()
-                    .then(selectedPort => {
-                        console.log('设备选择对话框已弹出，用户选择了设备');
-                        port = selectedPort;
-                        return connectToPort(port);
-                    })
-                    .then(() => {
-                        console.log('设备连接成功');
-                        showStatus('✅ 设备连接成功！', 'success');
-                        updateConnectionStatus('connected', '已连接');
-                        isConnected = true;
-                        
-                       
-                        
-                        // 开始读取数据
-                        startReading();
-                    })
-                    .catch(error => {
-                        console.log(`连接过程中出错: ${error.message}`);
-                        
-                        if (error.name === 'NotFoundError') {
-                            showStatus('未选择设备或未找到可用设备', 'info');
-                        } else {
-                            showStatus(`❌ 连接失败: ${error.message}`, 'error');
-                        }
-                        
-                        updateConnectionStatus('disconnected', '连接失败');
-                        isConnected = false;
-                        connectBtn.disabled = false;
-                    });
+                deviceInfo.innerHTML = deviceDetails;
             });
-
-            // 连接到端口
-            function connectToPort(port) {
-                console.log('开始配置并连接端口...');
-                
-                // 获取配置参数
-                const baudRate = "57600";
-                const dataBits = "8";
-                const stopBits = "1";
-                const parity = "none";
-                
-                console.log(`使用配置: ${baudRate} baud, ${dataBits} data bits, ${stopBits} stop bits, ${parity} parity`);
-                
-                // 打开端口
-                return port.open({
-                    baudRate: baudRate,
-                    dataBits: dataBits,
-                    stopBits: stopBits,
-                    parity: parity,
-                    flowControl: 'none'
-                }).then(() => {
-                    console.log('端口打开成功');
-                    
-                    const info = port.getInfo();
-                    let deviceDetails = ` <strong>状态:</strong> ✅ 已连接`;                  
-                    
-                    
-                    deviceInfo.innerHTML = deviceDetails;
-                });
+        }
+        
+        // 開始讀取資料
+        function startReading() {
+            if (!port || !port.readable) {
+                console.log('錯誤: 端口不可讀');
+                return;
             }
-
             
-
-            // 开始读取数据
-            function startReading() {
-                if (!port || !port.readable) {
-                    console.log('错误: 端口不可读');
-                    return;
-                }
+            isReading = true;
+            console.log('開始讀取資料循環');
+            
+            var strs = "";
+            const readLoop = () => {
+                if (!isReading || !port.readable) return;
                 
-                isReading = true;
-                console.log('开始读取数据循环');
-                var strs="";
-                const readLoop = () => {
-                    if (!isReading || !port.readable) return;
+                reader = port.readable.getReader();
+                
+                reader.read().then(({ value, done }) => {
+                    if (done) {
+                        console.log('讀取完成 (done)');
+                        reader.releaseLock();
+                        return;
+                    }
                     
-                    reader = port.readable.getReader();
+                    // 處理接收到的資料
+                    const decoder = new TextDecoder();
+                    const text = decoder.decode(value);
                     
-                    reader.read().then(({ value, done }) => {
-                        if (done) {
-                            console.log('读取完成 (done)');
-                            reader.releaseLock();
-                            return;
-                        }
-                        
-                        // 处理接收到的数据
-                        const decoder = new TextDecoder();
-                        const text = decoder.decode(value);
-                        
-                       
-                        strs+=text;
-                        if(strs.includes('\n')){
-// 按行分割数据
+                    strs += text;
+                    
+                    if (strs.includes('\n')) {
+                        // 按行分割資料
                         const lines = strs.split('\n');
                         
                         for (const line of lines) {
                             const trimmedLine = line.trim();
                             if (trimmedLine.length > 0) {
-                                console.log(`接收到原始数据: ${trimmedLine}`);
+                                console.log(`接收到原始資料: ${trimmedLine}`);
                                 
-                                // 解析数据
+                                // 解析資料
                                 const parsedData = parseData(trimmedLine);
                                 if (parsedData) {
-                                    // 更新數據表格
-                                    
-                                     getUserNameById(parsedData.idDecimal)
+                                    // 更新資料表格
+                                    getUserNameById(parsedData.idDecimal)
                                     .then(name => {                   
                                         if (name) {
-                                            parsedData.name=name;
-                                            
-                                           
+                                            parsedData.name = name;
                                             updateParsedDataTable(parsedData);
-                                           // speakText(name+" "+parsedData.timeDiff.toFixed(2)); 
                                             console.log(`分析結果: ID=${parsedData.idDecimal}, 時間差=${parsedData.timeDiff}`);
-                                        } else{
-                                             updateParsedDataTable(parsedData);
-                                             //speakText(parsedData.timeDiff); 
+                                        } else {
+                                            updateParsedDataTable(parsedData);
                                         }
-                                         console.log(dataLists);
+                                        console.log(dataLists);
                                     });
-                                    
                                 }
                             }
                         }
-                        strs="";
-                        }
-                        
-                        
-                        reader.releaseLock();
-                        
-                        // 继续读取
-                        if (isReading) {
-                            readLoop();
-                        }
-                    }).catch(error => {
-                        console.log(`讀取錯誤: ${error.message}`);
-                        reader.releaseLock();
-                        
-                        //如果仍然連接、則繼續讀取
-                        if (isReading && port) {
-                            setTimeout(readLoop, 100);
-                        }
-                    });
-                };
-                
-                readLoop();
-            }
-
-            // 解析數據
-            function parseData(data) {
+                        strs = "";
+                    }
+                    
+                    reader.releaseLock();
+                    
+                    // 繼續讀取
+                    if (isReading) {
+                        readLoop();
+                    }
+                }).catch(error => {
+                    console.log(`讀取錯誤: ${error.message}`);
+                    reader.releaseLock();
+                    
+                    // 如果仍然連接，則繼續讀取
+                    if (isReading && port) {
+                        setTimeout(readLoop, 100);
+                    }
+                });
+            };
             
-                const cleanData = data.trim();
-                
-                // 檢查長度
-                if (cleanData.length < 6) {
-                    console.log(`數據長度不足: ${cleanData}`);
-                    return null;
-                }
-                
-                // 提取ID (前六個字元)
-                const idHex = cleanData.substring(0, 6);
-                const idDecimal = parseInt(idHex, 16);
-                
-                // 提取時間戳記 (剩餘部分)
-                const timestampHex = cleanData.substring(6);
-                const timestampDecimal = parseInt(timestampHex, 16);
-                
-                // 計算時間差
-                let timeDiff = '-';
-                const t=findLastValidRecord(dataLists,idDecimal);
-                //console.log(t);
-                if (t !== null) {
-                    timeDiff = (timestampDecimal - t.millisecond)/4000;
-                }
-                
-                // 更新時間
-                //lastTimestamp = timestampDecimal;
-                
-                return {
-                    raw: cleanData,
-                    idHex: idHex,
-                    idDecimal: idDecimal,
-                    timestampHex: timestampHex,
-                    timestampDecimal: timestampDecimal,
-                    timeDiff: timeDiff,
-                    name:""
-                };
+            readLoop();
+        }
+        
+        // 解析資料
+        function parseData(data) {
+            const cleanData = data.trim();
+            
+            // 檢查長度
+            if (cleanData.length < 6) {
+                console.log(`資料長度不足: ${cleanData}`);
+                return null;
             }
-            function findLastValidRecord(dataList,id) {
+            
+            // 提取ID (前六個字元)
+            const idHex = cleanData.substring(0, 6);
+            const idDecimal = parseInt(idHex, 16);
+            
+            // 提取時間戳記 (剩餘部分)
+            const timestampHex = cleanData.substring(6);
+            const timestampDecimal = parseInt(timestampHex, 16);
+            
+            // 計算時間差
+            let timeDiff = '-';
+            const t = findLastValidRecord(dataLists, idDecimal);
+            
+            if (t !== null) {
+                timeDiff = (timestampDecimal - t.millisecond) / 4000;
+            }
+            
+            return {
+                raw: cleanData,
+                idHex: idHex,
+                idDecimal: idDecimal,
+                timestampHex: timestampHex,
+                timestampDecimal: timestampDecimal,
+                timeDiff: timeDiff,
+                name: ""
+            };
+        }
+        
+        function findLastValidRecord(dataList, id) {
             if (!dataList || dataList.length === 0) {
                 return null;
             }
@@ -1487,107 +1255,77 @@
             // 從最後一筆開始往前找
             for (let i = dataList.length - 1; i >= 0; i--) {
                 if (dataList[i].id !== null && dataList[i].id === id) {
-                return dataList[i];
+                    return dataList[i];
                 }
             }
             
             return null; // 沒有找到任何有效紀錄
-            }
-            // 更新解析數據表格
-            function updateParsedDataTable(parsedData) {
-                const row = document.createElement('tr');
-    
-                // 序号 - 修改为基于dataHistory长度计算
-                const indexCell = document.createElement('td');
-                indexCell.textContent = dataHistory.length + 1;
-                row.appendChild(indexCell);
-    
-                // ID (10進制)
-                const idDecimalCell = document.createElement('td');
-                idDecimalCell.textContent = parsedData.idDecimal;
-                row.appendChild(idDecimalCell);
-                // name
-                const nameCell = document.createElement('td');
-                nameCell.textContent = parsedData.name;
-                row.appendChild(nameCell);
-                // 時間差
-                const timeDiffCell = document.createElement('td');
-                timeDiffCell.textContent = parsedData.timeDiff;
-                row.appendChild(timeDiffCell);
-    
-                const time = document.createElement('td');
-                time.textContent = getCurrentTime();
-                row.appendChild(time);
-                dataLists.push({
-                    id: parsedData.idDecimal,
-                    name: parsedData.name,
-                    sec: parsedData.timeDiff,
-                    millisecond: parsedData.timestampDecimal,
-                    nowTime: getCurrentTime()
-                });    
-                playBeep();
-                // 修改这里：使用insertBefore而不是appendChild，插入到第一个子元素之前
-                if (parsedDataBody.firstChild) {
-                    parsedDataBody.insertBefore(row, parsedDataBody.firstChild);
-                } else {
-                    parsedDataBody.appendChild(row);
-                }
-    
-                // 保存 - 修改为添加到数组开头
-                dataHistory.unshift(parsedData);
-    
-                // 更新所有行的序号（因为新行插入到开头会影响所有行的序号）
-                updateRowIndexes();
-    
-                // 保持滚动位置在顶部（可选）
-                parsedDataBody.parentElement.scrollTop = 0;
-            }
-
-            // 新增函数：更新所有行的序号
-            function updateRowIndexes() {
-                const rows = parsedDataBody.querySelectorAll('tr');
-                rows.forEach((row, index) => {
-                    row.cells[0].textContent = rows.length - index; // 或者 index + 1，取决于你想要的序号顺序
-                });
-            }
-
-           
-
-         
-
+        }
         
-            // 清空解析数据
-            clearParsedBtn.addEventListener('click', function() {
-                parsedDataBody.innerHTML = '';
-                dataHistory = [];
-                lastTimestamp = null;
-                dataLists=[];
-                console.log(dataLists);
-                idcount=1;
-                console.log('已清空解析数据');
-            });
-
-           
-            
-            // 页面卸载时断开连接
-            window.addEventListener('beforeunload', function() {
-                if (isConnected && port) {
-                    console.log('页面关闭，正在断开连接...');
-                    isReading = false;
-                    
-                    if (reader) {
-                        reader.cancel().catch(() => {});
-                    }
-                    
-                    if (port) {
-                        port.close().catch(() => {});
-                    }
-                }
-            });
-
-            
-            
+        // 更新解析資料表格
+        function updateParsedDataTable(parsedData) {
+            const row = document.createElement('tr');
     
+            // 序號 - 修改為基於dataHistory長度計算
+            const indexCell = document.createElement('td');
+            indexCell.textContent = dataHistory.length + 1;
+            row.appendChild(indexCell);
+    
+            // ID (10進制)
+            const idDecimalCell = document.createElement('td');
+            idDecimalCell.textContent = parsedData.idDecimal;
+            row.appendChild(idDecimalCell);
+            
+            // 姓名
+            const nameCell = document.createElement('td');
+            nameCell.textContent = parsedData.name;
+            row.appendChild(nameCell);
+            
+            // 時間差
+            const timeDiffCell = document.createElement('td');
+            timeDiffCell.textContent = parsedData.timeDiff;
+            row.appendChild(timeDiffCell);
+    
+            const time = document.createElement('td');
+            time.textContent = getCurrentTime();
+            row.appendChild(time);
+            
+            dataLists.push({
+                id: parsedData.idDecimal,
+                name: parsedData.name,
+                sec: parsedData.timeDiff,
+                millisecond: parsedData.timestampDecimal,
+                nowTime: getCurrentTime()
+            });    
+            
+            playBeep();
+            
+            // 修改這裡：使用insertBefore而不是appendChild，插入到第一個子元素之前
+            if (parsedDataBody.firstChild) {
+                parsedDataBody.insertBefore(row, parsedDataBody.firstChild);
+            } else {
+                parsedDataBody.appendChild(row);
+            }
+    
+            // 儲存 - 修改為新增到陣列開頭
+            dataHistory.unshift(parsedData);
+    
+            // 更新所有行的序號（因為新行插入到開頭會影響所有行的序號）
+            updateRowIndexes();
+    
+            // 保持捲動位置在頂部（可選）
+            parsedDataBody.parentElement.scrollTop = 0;
+        }
+
+        // 新增函數：更新所有行的序號
+        function updateRowIndexes() {
+            const rows = parsedDataBody.querySelectorAll('tr');
+            rows.forEach((row, index) => {
+                row.cells[0].textContent = rows.length - index;
+            });
+        }
+        
+        // 取得目前時間
         function getCurrentTime() {
             const now = new Date();
             
@@ -1600,49 +1338,48 @@
             
             return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
         }
+        
+        // 語音相關變數
         let intervalId = null;
         let isRunning = false;
-         startTimer()
-        // 启动定时器
+        let idcount = 0;
+        
+        // 啟動計時器
         function startTimer() {
             if (!isRunning) {
                 intervalId = setInterval(InterSpeakText, 500);
                 isRunning = true;
-                console.log('定时器已启动');
+                console.log('計時器已啟動');
             }
         }
-        var idcount=0;
-        // 暂停定时器
+        
+        // 暫停計時器
         function pauseTimer() {
             if (isRunning) {
                 clearInterval(intervalId);
                 intervalId = null;
                 isRunning = false;
-                console.log('定时器已暂停');
+                console.log('計時器已暫停');
             }
         }
         
-        var t;
+        // 語音播報
         function InterSpeakText() { 
-            if(speechSynthesis.speaking)return;
+            if (speechSynthesis.speaking) return;
            
-            if(dataHistory.length>idcount){
+            if (dataHistory.length > idcount) {
                 pauseTimer();
                 
-                t=dataLists[idcount]; 
-                //setTimeout(() => {
-                    speakText(t.name+" "+parseFloat(t.sec).toFixed(2));   
-                //}, 500);
+                const t = dataLists[idcount]; 
+                speakText(t.name + " " + parseFloat(t.sec).toFixed(2));   
                 idcount++;   
-               console.log(t);            
+                console.log(t);            
              
                 startTimer();
             }
-            //console.log('定时执行的任务:'+idcount);
-            // 你的代码...
         }
-
-     
+        
+        // 文字轉語音
         function speakText(text) {
             if (text === '') {
                 alert('請輸入一些文字！');
@@ -1654,62 +1391,63 @@
                 // 停止任何正在進行的語音
                 window.speechSynthesis.cancel();
                 
-                // 創建新的語音實例
+                // 建立新的語音實例
                 const utterance = new SpeechSynthesisUtterance(text);
                 
-                // 設置語音屬性
-               // utterance.lang = 'zh-TW';
+                // 設定語音屬性
                 utterance.rate = 1;
                 utterance.pitch = 1;
                 utterance.volume = 1;
+                
                 // 播放語音
                 window.speechSynthesis.speak(utterance);
-             
             } else {
                 alert('抱歉，您的瀏覽器不支援語音合成功能！');
             }
         }
+        
+        // 音效相關變數
         let audioContext;
         let isPlaying = false;
-        // 初始化音频上下文
+        
+        // 初始化音訊上下文
         function initAudioContext() {
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
             }
         }
+        
+        // 播放提示音
         function playBeep() {
             if (isPlaying) return;
             
             initAudioContext();
-           
             
-            // 創建振盪器
+            // 建立振盪器
             const oscillator = audioContext.createOscillator();
             oscillator.type = 'sine';
-            oscillator.frequency.value = 800; // 1kHz
+            oscillator.frequency.value = 800; // 800Hz
             
-            // 创建增益节点
+            // 建立增益節點
             const gainNode = audioContext.createGain();
             gainNode.gain.value = 0.5;
-
             
-            
-            // 连接节点
+            // 連接節點
             oscillator.connect(gainNode);
             gainNode.connect(audioContext.destination);
             
-            // 播放声音
+            // 播放聲音
             oscillator.start();
-            oscillator.stop(audioContext.currentTime + 0.3); // 0.5秒后停止
+            oscillator.stop(audioContext.currentTime + 0.3); // 0.3秒後停止
             
-           
-            
-            // 声音播放结束后重置状态
+            // 聲音播放結束後重設狀態
             oscillator.onended = function() {
                 isPlaying = false;               
             };
         }
         
+        // 啟動計時器
+        startTimer();
     </script>
 </body>
 </html>
