@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="zh-TW" class="trancy-zh-Hant translated-ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RC Loop Speed</title>
     <style>
@@ -647,26 +648,28 @@
             max-width: 100px;
         }
     </style>
-<link type="text/css" rel="stylesheet" charset="UTF-8" href="./RC Loop Speed(tw)_files/m=el_main_css"></head>
+</head>
 <body>
     <div class="container">
         <header>
-            <h8><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">🔵 RC Loops Speed</font></font></h8>
+            <h8>🔵 RC Loops Speed</h8>
         </header>
         
         <div class="card">
-            <h3><span class="icon"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">📊</font></font></span><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">連接狀態</font></font></h3>
+            <h3><span class="icon">📊</span> 連接狀態</h3>
             <div class="connection-status">
-                <div id="status-indicator" class="status-indicator connected"></div>
-                <span id="connection-text"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">已連接</font></font></span>
+                <div id="status-indicator" class="status-indicator disconnected"></div>
+                <span id="connection-text">未連接</span>
             </div>
             <div class="button-group">
-                <button class="btn btn-success" id="connect-btn"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">
+                <button class="btn btn-success" id="connect-btn">
                     🔌 連接
-                </font></font></button>
+                </button>
             </div>
             
-            <div id="device-info" class="status info"> <strong><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">狀態:</font></font></strong><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;"> ✅ 已連接</font></font></div>
+            <div id="device-info" class="status info">
+                等待連接設備...
+            </div>
         </div>
 
        
@@ -674,34 +677,34 @@
        
 
         <div class="card">
-            <h3><span class="icon"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">🔍</font></font></span><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">圈速</font></font></h3>
+            <h3><span class="icon">🔍</span> 圈速 </h3>
            
             <div class="parsed-data-container">
                 <table class="parsed-data-table" id="parsed-data-table">
                     <thead>
                         <tr>
-                            <th><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">序號</font></font></th>                           
-                            <th><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">ID</font></font></th>
-                            <th><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">Name</font></font></th>
-                            <th><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">秒</font></font></th>
-                            <th><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">NOW TIME</font></font></th>
+                            <th>序号</th>                           
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>秒</th>
+                            <th>NOW TIME</th>
 
                         </tr>
                     </thead>
-                    <tbody id="parsed-data-body"><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">11</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">1.445</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:49</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">10</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">7.3405</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:48</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">9</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">1.598</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:40</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">8</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2.055</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:39</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">7</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">5.2465</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:37</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">6</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">6.2945</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:32</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">5</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">1.8515</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:25</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">1.7535</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:23</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">3</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">1.7225</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:22</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2.6415</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:20</font></font></td></tr><tr><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">1</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">-</font></font></td><td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">2025/10/17 16:52:17</font></font></td></tr>
+                    <tbody id="parsed-data-body">
                         <!-- 解析后的数据将在这里显示 -->
                     </tbody>
                 </table>
             </div>
             
             <div class="button-group">
-                <button class="btn btn-warning" id="clear-parsed-btn"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">🗑️ 清空圈速紀錄</font></font></button>
+                <button class="btn btn-warning" id="clear-parsed-btn">🗑️ 清空圈速紀錄</button>
             </div>
         </div>
         <div class="status" id="statusMessage"></div>
         
         <div class="main-action">
-            <button class="btn" id="editUsersBtn"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">編輯使用者</font></font></button>
+            <button class="btn" id="editUsersBtn">编辑用户</button>
         </div>
         <div class="card">
            
@@ -713,83 +716,43 @@
     <div class="modal" id="editModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">使用者管理</font></font></h3>
-                <button class="close-btn" id="closeModal"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">×</font></font></button>
+                <h3 class="modal-title">用户管理</h3>
+                <button class="close-btn" id="closeModal">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="user-form">
                     <div class="form-group">
-                        <label for="userId"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">ID</font></font></label>
+                        <label for="userId">ID</label>
                         <input type="number" id="userId" class="id-input" placeholder="ID" min="1">
                     </div>
                     <div class="form-group">
-                        <label for="userName"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">姓名</font></font></label>
-                        <input type="text" id="userName" placeholder="輸入使用者名稱">
+                        <label for="userName">姓名</label>
+                        <input type="text" id="userName" placeholder="输入用户名">
                     </div>
-                    <button class="btn btn-success" id="addUserBtn"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">新增用戶</font></font></button>
+                    <button class="btn btn-success" id="addUserBtn">添加用户</button>
                 </div>
                 
                 <div id="usersTableContainer">
                     <table id="usersTable">
                         <thead>
                             <tr>
-                                <th><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">ID</font></font></th>
-                                <th><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">姓名</font></font></th>
-                                <th><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">操作</font></font></th>
+                                <th>ID</th>
+                                <th>姓名</th>
+                                <th>操作</th>
                             </tr>
                         </thead>
-                        <tbody id="usersTableBody"><tr>
-                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">123</font></font></td>
-                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">asd1</font></font></td>
-                    <td class="actions">
-                        <button class="action-btn edit-btn" onclick="editUser(123)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">編輯</font></font></button>
-                        <button class="action-btn delete-btn" onclick="deleteUser(123)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">刪除</font></font></button>
-                    </td>
-                </tr><tr>
-                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">1234567</font></font></td>
-                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">vv</font></font></td>
-                    <td class="actions">
-                        <button class="action-btn edit-btn" onclick="editUser(1234567)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">編輯</font></font></button>
-                        <button class="action-btn delete-btn" onclick="deleteUser(1234567)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">刪除</font></font></button>
-                    </td>
-                </tr><tr>
-                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4570098</font></font></td>
-                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">bbbb</font></font></td>
-                    <td class="actions">
-                        <button class="action-btn edit-btn" onclick="editUser(4570098)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">編輯</font></font></button>
-                        <button class="action-btn delete-btn" onclick="deleteUser(4570098)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">刪除</font></font></button>
-                    </td>
-                </tr><tr>
-                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747690</font></font></td>
-                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">范志強</font></font></td>
-                    <td class="actions">
-                        <button class="action-btn edit-btn" onclick="editUser(4747690)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">編輯</font></font></button>
-                        <button class="action-btn delete-btn" onclick="deleteUser(4747690)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">刪除</font></font></button>
-                    </td>
-                </tr><tr>
-                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">4747700</font></font></td>
-                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">三秒</font></font></td>
-                    <td class="actions">
-                        <button class="action-btn edit-btn" onclick="editUser(4747700)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">編輯</font></font></button>
-                        <button class="action-btn delete-btn" onclick="deleteUser(4747700)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">刪除</font></font></button>
-                    </td>
-                </tr><tr>
-                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">5555555</font></font></td>
-                    <td><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">ddd</font></font></td>
-                    <td class="actions">
-                        <button class="action-btn edit-btn" onclick="editUser(5555555)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">編輯</font></font></button>
-                        <button class="action-btn delete-btn" onclick="deleteUser(5555555)"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">刪除</font></font></button>
-                    </td>
-                </tr></tbody>
+                        <tbody id="usersTableBody">
+                            <!-- 用户数据将在这里动态生成 -->
+                        </tbody>
                     </table>
-                    <div id="emptyState" class="empty-state" style="display: none;">
-                        <i><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">📊</font></font></i>
-                        <p><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">暫無用戶數據，請新增用戶</font></font></p>
+                    <div id="emptyState" class="empty-state">
+                        <i>📊</i>
+                        <p>暂无用户数据，请添加用户</p>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn" id="closeModalBtn"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">關閉</font></font></button>
+                <button class="btn" id="closeModalBtn">关闭</button>
             </div>
         </div>
     </div>
@@ -1648,7 +1611,7 @@
                 console.log('定时器已启动');
             }
         }
-
+        var idcount=0;
         // 暂停定时器
         function pauseTimer() {
             if (isRunning) {
@@ -1658,26 +1621,21 @@
                 console.log('定时器已暂停');
             }
         }
-        var idcount=0;
+        
         var t;
         function InterSpeakText() { 
             if(speechSynthesis.speaking)return;
-
+           
             if(dataHistory.length>idcount){
                 pauseTimer();
-                for(i=idcount;dataHistory.length>i;i++){  
-                               
-                    t=dataLists[i];                   
-                    idcount=i; 
-                    
-                    
-                    setTimeout(() => {
+                
+                t=dataLists[idcount]; 
+                //setTimeout(() => {
                     speakText(t.name+" "+parseFloat(t.sec).toFixed(2));   
-                    }, 500);
-                   
-                   console.log(t.name+" "+parseFloat(t.sec).toFixed(2));            
-                }
-                idcount++;
+                //}, 500);
+                idcount++;   
+               console.log(t);            
+             
                 startTimer();
             }
             //console.log('定时执行的任务:'+idcount);
@@ -1725,7 +1683,7 @@
             initAudioContext();
            
             
-            // 创建振荡器
+            // 創建振盪器
             const oscillator = audioContext.createOscillator();
             oscillator.type = 'sine';
             oscillator.frequency.value = 800; // 1kHz
@@ -1752,7 +1710,6 @@
             };
         }
         
-    </script><div id="goog-gt-tt" class="VIpgJd-yAWNEb-L7lbkb skiptranslate" style="border-radius: 12px; margin: 0 0 0 -23px; padding: 0; font-family: &#39;Google Sans&#39;, Arial, sans-serif;" data-id=""><div id="goog-gt-vt" class="VIpgJd-yAWNEb-hvhgNd"><div class="VIpgJd-yAWNEb-hvhgNd-Ud7fr"><img src="./RC Loop Speed(tw)_files/24px.svg" width="24" height="24" alt=""><div class=" VIpgJd-yAWNEb-hvhgNd-IuizWc-i3jM8c " dir="ltr">原文</div></div><div class="VIpgJd-yAWNEb-hvhgNd-k77Iif"><div id="goog-gt-original-text" class="VIpgJd-yAWNEb-nVMfcd-fmcmS VIpgJd-yAWNEb-hvhgNd-axAV1"></div></div><div class="VIpgJd-yAWNEb-hvhgNd-N7Eqid ltr"><div class="VIpgJd-yAWNEb-hvhgNd-N7Eqid-B7I4Od ltr" dir="ltr"><div class="VIpgJd-yAWNEb-hvhgNd-UTujCb">為這個翻譯評分</div><div class="VIpgJd-yAWNEb-hvhgNd-eO9mKe">你的意見回饋將用於協助改善 Google 翻譯品質</div></div><div class="VIpgJd-yAWNEb-hvhgNd-xgov5 ltr"><button id="goog-gt-thumbUpButton" type="button" class="VIpgJd-yAWNEb-hvhgNd-bgm6sf" title="譯文品質良好" aria-label="譯文品質良好" aria-pressed="false"><span id="goog-gt-thumbUpIcon"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="VIpgJd-yAWNEb-hvhgNd-THI6Vb NMm5M"><path d="M21 7h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 0S7.08 6.85 7 7H2v13h16c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73V9c0-1.1-.9-2-2-2zM7 18H4V9h3v9zm14-7l-3 7H9V8l4.34-4.34L12 9h9v2z"></path></svg></span><span id="goog-gt-thumbUpIconFilled"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="VIpgJd-yAWNEb-hvhgNd-THI6Vb NMm5M"><path d="M21 7h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 0S7.08 6.85 7 7v13h11c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73V9c0-1.1-.9-2-2-2zM5 7H1v13h4V7z"></path></svg></span></button><button id="goog-gt-thumbDownButton" type="button" class="VIpgJd-yAWNEb-hvhgNd-bgm6sf" title="譯文品質不佳" aria-label="譯文品質不佳" aria-pressed="false"><span id="goog-gt-thumbDownIcon"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="VIpgJd-yAWNEb-hvhgNd-THI6Vb NMm5M"><path d="M3 17h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 24s7.09-6.85 7.17-7h5V4H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2zM17 6h3v9h-3V6zM3 13l3-7h9v10l-4.34 4.34L12 15H3v-2z"></path></svg></span><span id="goog-gt-thumbDownIconFilled"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="VIpgJd-yAWNEb-hvhgNd-THI6Vb NMm5M"><path d="M3 17h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 24s7.09-6.85 7.17-7V4H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2zm16 0h4V4h-4v13z"></path></svg></span></button></div></div><div id="goog-gt-votingHiddenPane" class="VIpgJd-yAWNEb-hvhgNd-aXYTce"><form id="goog-gt-votingForm" action="https://translate.googleapis.com/translate_voting?client=te_lib" method="post" target="votingFrame" class="VIpgJd-yAWNEb-hvhgNd-aXYTce"><input type="text" name="sl" id="goog-gt-votingInputSrcLang"><input type="text" name="tl" id="goog-gt-votingInputTrgLang"><input type="text" name="query" id="goog-gt-votingInputSrcText"><input type="text" name="gtrans" id="goog-gt-votingInputTrgText"><input type="text" name="vote" id="goog-gt-votingInputVote"></form><iframe name="votingFrame" frameborder="0" src="./RC Loop Speed(tw)_files/saved_resource.html"></iframe></div></div></div>
-
-
-</body><link rel="stylesheet" asset="eduser.css" href="chrome-extension://mjdbhokoopacimoekfgkcoogikbfgngb/assets/eduser.css"></html>
+    </script>
+</body>
+</html>
