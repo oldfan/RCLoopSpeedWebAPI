@@ -46,23 +46,19 @@
         header {
             text-align: center;
             margin-bottom: 30px;
-            padding: 30px;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
         }
         
         h1 {
-            font-size: 2.5rem;
+            color: var(--dark);
             margin-bottom: 10px;
+            font-size: 28px;
         }
         
-        .description {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 16px;
         }
         
         .card {
@@ -143,8 +139,6 @@
             border-radius: 8px;
             margin: 10px 0;
             font-weight: 500;
-            max-width: 600px;
-            margin: 0 auto 20px;
         }
         
         .success {
@@ -203,15 +197,81 @@
             100% { opacity: 1; }
         }
         
-        .button-group {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
             margin: 15px 0;
         }
         
-        .main-action {
-            margin: 40px 0;
+        .config-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            background: white;
+        }
+        
+        .data-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .data-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .send-section, .receive-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+            margin-bottom: 15px;
+            font-family: monospace;
+        }
+        
+        .receive-box {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            height: 120px;
+            overflow-y: auto;
+            font-family: monospace;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+            font-size: 14px;
         }
         
         .parsed-data-container {
@@ -245,7 +305,74 @@
             background-color: #f9f9f9;
         }
         
-        /* Modal Styles */
+        .log-box {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        
+        .troubleshoot-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .troubleshoot-section h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .simple-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+            transition: all 0.2s;
+        }
+        
+        .simple-btn:hover {
+            background: #2980b9;
+        }
+        
+        .description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .main-action {
+            margin: 40px 0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
@@ -314,13 +441,6 @@
         .form-group {
             margin-bottom: 20px;
             text-align: left;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #444;
         }
         
         input {
@@ -425,26 +545,12 @@
         .id-input {
             max-width: 100px;
         }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            header {
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h3>🔵 RC Loop Speed</h3>
+            <h1>🔵 RC Loops Speed</h1>
         </header>
         
         <div class="card">
@@ -546,11 +652,29 @@
     </div>
     
     <script>
-        // DOM Elements
+        // Global variables
+        let port = null;
+        let reader = null;
+        let isConnected = false;
+        let isReading = false;
+        let dataLists = [];
+        let dataHistory = [];
+        let lastTimestamp = null;
+        let db;
+        const dbName = "UserDB";
+        const dbVersion = 1;
+        const storeName = "users";
+        
+        // DOM elements
         const connectBtn = document.getElementById('connect-btn');
         const clearParsedBtn = document.getElementById('clear-parsed-btn');
         const editUsersBtn = document.getElementById('editUsersBtn');
+        const deviceInfo = document.getElementById('device-info');
+        const statusArea = document.getElementById('status-area');
         const statusMessage = document.getElementById('statusMessage');
+        const statusIndicator = document.getElementById('status-indicator');
+        const connectionText = document.getElementById('connection-text');
+        const parsedDataBody = document.getElementById('parsed-data-body');
         
         // Modal related elements
         const editModal = document.getElementById('editModal');
@@ -562,67 +686,136 @@
         const userNameInput = document.getElementById('userName');
         const addUserBtn = document.getElementById('addUserBtn');
         
-        const deviceInfo = document.getElementById('device-info');
-        const statusArea = document.getElementById('status-area');
-        const statusIndicator = document.getElementById('status-indicator');
-        const connectionText = document.getElementById('connection-text');
-        const parsedDataBody = document.getElementById('parsed-data-body');
-
-        // Global variables
-        let port = null;
-        let reader = null;
-        let isConnected = false;
-        let isReading = false;
-        let dataLists = [];
-        let dataHistory = [];
-        let lastTimestamp = null;
-        
-        // Database variables
-        let db;
-        const dbName = "UserDB";
-        const dbVersion = 1;
-        const storeName = "users";
-        
-        // Timer variables
-        let intervalId = null;
-        let isRunning = false;
-        let idcount = 1;
-
-        // Initialize application
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             init();
             setupEventListeners();
         });
-
-        // Setup event listeners
+        
+        // Initialize system
+        function init() {
+            console.log('System initialization started...');
+            
+            // Check browser support
+            if (!('serial' in navigator)) {
+                showStatus('❌ Your browser does not support Web Serial API', 'error');
+                connectBtn.disabled = true;
+                console.log('Error: Browser does not support Web Serial API');
+                return;
+            }
+            
+            console.log('✅ Web Serial API supported');
+            
+            // Check if in secure context
+            if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+                showStatus('⚠️ Recommended to use in HTTPS or localhost environment', 'warning');
+                console.log('Warning: Current environment is not HTTPS or localhost');
+            } else {
+                console.log('✅ Secure environment (HTTPS or localhost)');
+            }
+            
+            showStatus('Please click "Connect Device" button to select your device', 'info');
+            console.log('System initialization completed, waiting for user action');
+            
+            initDB();
+        }
+        
+        // Set up event listeners
         function setupEventListeners() {
-            // Connection button
-            connectBtn.addEventListener('click', connectDevice);
+            // Connect button
+            connectBtn.addEventListener('click', function() {
+                console.log('User clicked connect button');
+                
+                if (!('serial' in navigator)) {
+                    showStatus('❌ Browser does not support Web Serial API', 'error');
+                    return;
+                }
+                
+                updateConnectionStatus('connecting', 'Connecting...');
+                showStatus('Requesting device permission...', 'info');
+                
+                // Directly request device
+                navigator.serial.requestPort()
+                    .then(selectedPort => {
+                        console.log('Device selection dialog opened, user selected device');
+                        port = selectedPort;
+                        return connectToPort(port);
+                    })
+                    .then(() => {
+                        console.log('Device connected successfully');
+                        showStatus('✅ Device connected successfully!', 'success');
+                        updateConnectionStatus('connected', 'Connected');
+                        isConnected = true;
+                        
+                        // Start reading data
+                        startReading();
+                    })
+                    .catch(error => {
+                        console.log(`Error during connection: ${error.message}`);
+                        
+                        if (error.name === 'NotFoundError') {
+                            showStatus('No device selected or no available device found', 'info');
+                        } else {
+                            showStatus(`❌ Connection failed: ${error.message}`, 'error');
+                        }
+                        
+                        updateConnectionStatus('disconnected', 'Connection failed');
+                        isConnected = false;
+                        connectBtn.disabled = false;
+                    });
+            });
             
-            // Clear parsed data button
-            clearParsedBtn.addEventListener('click', clearParsedData);
+            // Clear parsed data
+            clearParsedBtn.addEventListener('click', function() {
+                parsedDataBody.innerHTML = '';
+                dataHistory = [];
+                lastTimestamp = null;
+                dataLists = [];
+                console.log(dataLists);
+                idcount = 1;
+                console.log('Parsed data cleared');
+            });
             
-            // Edit users modal
-            editUsersBtn.addEventListener('click', openEditModal);
-            closeModalBtn.addEventListener('click', closeModal);
-            closeModalBtn2.addEventListener('click', closeModal);
-            addUserBtn.addEventListener('click', addUser);
+            // Open edit modal
+            editUsersBtn.addEventListener('click', function() {
+                openEditModal();
+            });    
+        
+            // Close modal
+            closeModalBtn.addEventListener('click', function() {
+                closeModal();
+            });
             
-            // Enter key support for user form
+            closeModalBtn2.addEventListener('click', function() {
+                closeModal();
+            });
+            
+            // Add user
+            addUserBtn.addEventListener('click', function() {
+                addUser();
+            });
+            
+            // Press Enter to add user
             userNameInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') addUser();
+                if (e.key === 'Enter') {
+                    addUser();
+                }
             });
             
             userIdInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') addUser();
+                if (e.key === 'Enter') {
+                    addUser();
+                }
             });
             
-            // Close modal when clicking outside
+            // Click outside modal to close
             editModal.addEventListener('click', function(e) {
-                if (e.target === editModal) closeModal();
+                if (e.target === editModal) {
+                    closeModal();
+                }
             });
             
-            // Disconnect when page is closed
+            // Disconnect when page unloads
             window.addEventListener('beforeunload', function() {
                 if (isConnected && port) {
                     console.log('Page closing, disconnecting...');
@@ -638,36 +831,7 @@
                 }
             });
         }
-
-        // Initialize application
-        function init() {
-            console.log('Initializing system...');
-            
-            // Check browser support
-            if (!('serial' in navigator)) {
-                showStatus('❌ Your browser does not support Web Serial API', 'error');
-                connectBtn.disabled = true;
-                console.log('Error: Browser does not support Web Serial API');
-                return;
-            }
-            
-            console.log('✅ Web Serial API supported');
-            
-            // Check if in secure context
-            if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-                showStatus('⚠️ Recommended to use in HTTPS or localhost environment', 'warning');
-                console.log('Warning: Not in HTTPS or localhost environment');
-            } else {
-                console.log('✅ Secure environment (HTTPS or localhost)');
-            }
-            
-            showStatus('Please click "Connect Device" button to select your device', 'info');
-            console.log('System initialization complete, waiting for user action');
-            
-            initDB();
-            startTimer();
-        }
-
+        
         // Initialize database
         function initDB() {
             const request = indexedDB.open(dbName, dbVersion);
@@ -697,8 +861,8 @@
                 }
             };
         }
-
-        // Load all users from database
+        
+        // Load all users
         function loadAllUsers() {
             const transaction = db.transaction([storeName], 'readonly');
             const objectStore = transaction.objectStore(storeName);
@@ -713,8 +877,8 @@
                 showStatus('Error: Cannot load user data', 'error');
             };
         }
-
-        // Display users in table
+        
+        // Display user list
         function displayUsers(users) {
             usersTableBody.innerHTML = '';
             
@@ -743,34 +907,21 @@
                 usersTableBody.appendChild(row);
             });
         }
-
-        // Get user name by ID
-        function getUserNameById(id) {
-            return new Promise((resolve, reject) => {
-                if (!db) {
-                    reject(new Error('Database not initialized'));
-                    return;
-                }
-                
-                const transaction = db.transaction([storeName], 'readonly');
-                const objectStore = transaction.objectStore(storeName);
-                const request = objectStore.get(id);
-                
-                request.onsuccess = function() {
-                    if (request.result) {
-                        resolve(request.result.name);
-                    } else {
-                        resolve(null);
-                    }
-                };
-                
-                request.onerror = function() {
-                    reject(new Error('Query failed'));
-                };
-            });
+        
+        // Open edit modal
+        function openEditModal() {
+            editModal.style.display = 'flex';
+            loadAllUsers();
         }
 
-        // Add user to database
+        // Close modal
+        function closeModal() {
+            editModal.style.display = 'none';
+            userIdInput.value = '';
+            userNameInput.value = '';
+        }
+
+        // Add user
         function addUser() {
             const id = parseInt(userIdInput.value);
             const name = userNameInput.value.trim();
@@ -781,7 +932,7 @@
             }
             
             if (!name) {
-                showStatus('Error: Please enter a username', 'error');
+                showStatus('Error: Please enter username', 'error');
                 return;
             }
             
@@ -790,7 +941,7 @@
             const transaction = db.transaction([storeName], 'readwrite');
             const objectStore = transaction.objectStore(storeName);
             
-            // Check if ID already exists
+            // First check if ID already exists
             const checkRequest = objectStore.get(id);
             
             checkRequest.onsuccess = function() {
@@ -799,7 +950,7 @@
                     return;
                 }
                 
-                // ID doesn't exist, add user
+                // ID doesn't exist, can add user
                 const addRequest = objectStore.add(user);
                 
                 addRequest.onsuccess = function() {
@@ -841,7 +992,7 @@
             };
         }
 
-        // Update user in database
+        // Update user
         function updateUser(id, newName) {
             const user = { id: id, name: newName };
             
@@ -888,29 +1039,54 @@
                 showStatus('Error: Cannot delete user', 'error');
             };
         }
-
-        // Open edit modal
-        function openEditModal() {
-            editModal.style.display = 'flex';
-            loadAllUsers();
+        
+        // Function to get user name by ID
+        function getUserNameById(id) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject(new Error('Database not initialized'));
+                    return;
+                }
+                
+                const transaction = db.transaction([storeName], 'readonly');
+                const objectStore = transaction.objectStore(storeName);
+                const request = objectStore.get(id);
+                
+                request.onsuccess = function() {
+                    if (request.result) {
+                        resolve(request.result.name);
+                    } else {
+                        resolve(null);
+                    }
+                };
+                
+                request.onerror = function() {
+                    reject(new Error('Query failed'));
+                };
+            });
         }
-
-        // Close modal
-        function closeModal() {
-            editModal.style.display = 'none';
-            userIdInput.value = '';
-            userNameInput.value = '';
+        
+        // Update connection status display
+        function updateConnectionStatus(status, text) {
+            statusIndicator.className = 'status-indicator ' + status;
+            connectionText.textContent = text;
         }
-
+        
         // Show status message
-        function showStatus(message, type, isModal = false) { 
-            const targetElement = isModal ? statusMessage : statusArea;     
+        function showStatus(message, type, isModal = false) {
+            // If it's a modal status message, use statusMessage element
+            const targetElement = isModal ? statusMessage : statusArea;
+            
+            // Create status message element
             const statusDiv = document.createElement('div');
             statusDiv.className = `status ${type}`;
             statusDiv.textContent = message;
+            
+            // Clear previous status messages
             targetElement.innerHTML = '';
             targetElement.appendChild(statusDiv);
-        
+            
+            // If not error type message, auto hide after 3 seconds
             if (type !== 'error') {
                 setTimeout(() => {
                     if (statusDiv.parentElement) {
@@ -925,65 +1101,16 @@
                 }, 3000);
             }
         }
-
-        // Update connection status display
-        function updateConnectionStatus(status, text) {
-            statusIndicator.className = 'status-indicator ' + status;
-            connectionText.textContent = text;
-        }
-
-        // Connect to device
-        function connectDevice() {
-            console.log('User clicked connect button');
-            
-            if (!('serial' in navigator)) {
-                showStatus('❌ Browser does not support Web Serial API', 'error');
-                return;
-            }
-            
-            updateConnectionStatus('connecting', 'Connecting...');
-            showStatus('Requesting device permission...', 'info');
-            
-            // Request device directly
-            navigator.serial.requestPort()
-                .then(selectedPort => {
-                    console.log('Device selection dialog shown, user selected device');
-                    port = selectedPort;
-                    return connectToPort(port);
-                })
-                .then(() => {
-                    console.log('Device connected successfully');
-                    showStatus('✅ Device connected successfully!', 'success');
-                    updateConnectionStatus('connected', 'Connected');
-                    isConnected = true;
-                    
-                    // Start reading data
-                    startReading();
-                })
-                .catch(error => {
-                    console.log(`Error during connection: ${error.message}`);
-                    
-                    if (error.name === 'NotFoundError') {
-                        showStatus('No device selected or no available device found', 'info');
-                    } else {
-                        showStatus(`❌ Connection failed: ${error.message}`, 'error');
-                    }
-                    
-                    updateConnectionStatus('disconnected', 'Connection failed');
-                    isConnected = false;
-                    connectBtn.disabled = false;
-                });
-        }
-
+        
         // Connect to port
         function connectToPort(port) {
             console.log('Starting port configuration and connection...');
             
             // Get configuration parameters
-            const baudRate = 57600;
-            const dataBits = 8;
-            const stopBits = 1;
-            const parity = 'none';
+            const baudRate = "57600";
+            const dataBits = "8";
+            const stopBits = "1";
+            const parity = "none";
             
             console.log(`Using configuration: ${baudRate} baud, ${dataBits} data bits, ${stopBits} stop bits, ${parity} parity`);
             
@@ -998,13 +1125,13 @@
                 console.log('Port opened successfully');
                 
                 const info = port.getInfo();
-                let deviceDetails = `<strong>Status:</strong> ✅ Connected`;
+                let deviceDetails = ` <strong>Status:</strong> ✅ Connected`;                  
                 
                 deviceInfo.innerHTML = deviceDetails;
             });
         }
-
-        // Start reading data from port
+        
+        // Start reading data
         function startReading() {
             if (!port || !port.readable) {
                 console.log('Error: Port not readable');
@@ -1012,10 +1139,9 @@
             }
             
             isReading = true;
-            console.log('Starting data read loop');
+            console.log('Starting data reading loop');
             
-            let buffer = "";
-            
+            var strs = "";
             const readLoop = () => {
                 if (!isReading || !port.readable) return;
                 
@@ -1023,7 +1149,7 @@
                 
                 reader.read().then(({ value, done }) => {
                     if (done) {
-                        console.log('Read completed (done)');
+                        console.log('Reading completed (done)');
                         reader.releaseLock();
                         return;
                     }
@@ -1032,11 +1158,11 @@
                     const decoder = new TextDecoder();
                     const text = decoder.decode(value);
                     
-                    buffer += text;
+                    strs += text;
                     
-                    if (buffer.includes('\n')) {
+                    if (strs.includes('\n')) {
                         // Split data by lines
-                        const lines = buffer.split('\n');
+                        const lines = strs.split('\n');
                         
                         for (const line of lines) {
                             const trimmedLine = line.trim();
@@ -1048,20 +1174,20 @@
                                 if (parsedData) {
                                     // Update data table
                                     getUserNameById(parsedData.idDecimal)
-                                        .then(name => {
-                                            if (name) {
-                                                parsedData.name = name;
-                                                updateParsedDataTable(parsedData);
-                                                console.log(`Analysis result: ID=${parsedData.idDecimal}, Time difference=${parsedData.timeDiff}`);
-                                            } else {
-                                                updateParsedDataTable(parsedData);
-                                            }
-                                            console.log(dataLists);
-                                        });
+                                    .then(name => {                   
+                                        if (name) {
+                                            parsedData.name = name;
+                                            updateParsedDataTable(parsedData);
+                                            console.log(`Analysis result: ID=${parsedData.idDecimal}, Time difference=${parsedData.timeDiff}`);
+                                        } else {
+                                            updateParsedDataTable(parsedData);
+                                        }
+                                        console.log(dataLists);
+                                    });
                                 }
                             }
                         }
-                        buffer = "";
+                        strs = "";
                     }
                     
                     reader.releaseLock();
@@ -1071,7 +1197,7 @@
                         readLoop();
                     }
                 }).catch(error => {
-                    console.log(`Read error: ${error.message}`);
+                    console.log(`Reading error: ${error.message}`);
                     reader.releaseLock();
                     
                     // If still connected, continue reading
@@ -1083,8 +1209,8 @@
             
             readLoop();
         }
-
-        // Parse received data
+        
+        // Parse data
         function parseData(data) {
             const cleanData = data.trim();
             
@@ -1094,7 +1220,7 @@
                 return null;
             }
             
-            // Extract ID (first six characters)
+            // Extract ID (first 6 characters)
             const idHex = cleanData.substring(0, 6);
             const idDecimal = parseInt(idHex, 16);
             
@@ -1104,10 +1230,10 @@
             
             // Calculate time difference
             let timeDiff = '-';
-            const lastRecord = findLastValidRecord(dataLists, idDecimal);
+            const t = findLastValidRecord(dataLists, idDecimal);
             
-            if (lastRecord !== null) {
-                timeDiff = (timestampDecimal - lastRecord.millisecond) / 4000;
+            if (t !== null) {
+                timeDiff = (timestampDecimal - t.millisecond) / 4000;
             }
             
             return {
@@ -1120,14 +1246,13 @@
                 name: ""
             };
         }
-
-        // Find last valid record for the given ID
+        
         function findLastValidRecord(dataList, id) {
             if (!dataList || dataList.length === 0) {
                 return null;
             }
             
-            // Search from last record backwards
+            // Search from last record forward
             for (let i = dataList.length - 1; i >= 0; i--) {
                 if (dataList[i].id !== null && dataList[i].id === id) {
                     return dataList[i];
@@ -1136,16 +1261,16 @@
             
             return null; // No valid record found
         }
-
+        
         // Update parsed data table
         function updateParsedDataTable(parsedData) {
             const row = document.createElement('tr');
-            
-            // Index - based on dataHistory length
+    
+            // Number - modified to be based on dataHistory length
             const indexCell = document.createElement('td');
             indexCell.textContent = dataHistory.length + 1;
             row.appendChild(indexCell);
-            
+    
             // ID (decimal)
             const idDecimalCell = document.createElement('td');
             idDecimalCell.textContent = parsedData.idDecimal;
@@ -1160,57 +1285,46 @@
             const timeDiffCell = document.createElement('td');
             timeDiffCell.textContent = parsedData.timeDiff;
             row.appendChild(timeDiffCell);
+    
+            const time = document.createElement('td');
+            time.textContent = getCurrentTime();
+            row.appendChild(time);
             
-            // Current time
-            const timeCell = document.createElement('td');
-            timeCell.textContent = getCurrentTime();
-            row.appendChild(timeCell);
-            
-            // Add to data list
             dataLists.push({
                 id: parsedData.idDecimal,
                 name: parsedData.name,
                 sec: parsedData.timeDiff,
                 millisecond: parsedData.timestampDecimal,
                 nowTime: getCurrentTime()
-            });
+            });    
             
-            // Insert at the beginning of the table
+            playBeep();
+            
+            // Modified here: use insertBefore instead of appendChild, insert before first child
             if (parsedDataBody.firstChild) {
                 parsedDataBody.insertBefore(row, parsedDataBody.firstChild);
             } else {
                 parsedDataBody.appendChild(row);
             }
-            
-            // Save to history (add to beginning of array)
+    
+            // Save - modified to add to beginning of array
             dataHistory.unshift(parsedData);
-            
-            // Update all row indexes (because new row inserted at beginning affects all row indexes)
+    
+            // Update all row numbers (because new row inserted at beginning affects all row numbers)
             updateRowIndexes();
-            
+    
             // Keep scroll position at top (optional)
             parsedDataBody.parentElement.scrollTop = 0;
         }
 
-        // Update all row indexes
+        // New function: update all row numbers
         function updateRowIndexes() {
             const rows = parsedDataBody.querySelectorAll('tr');
             rows.forEach((row, index) => {
                 row.cells[0].textContent = rows.length - index;
             });
         }
-
-        // Clear parsed data
-        function clearParsedData() {
-            parsedDataBody.innerHTML = '';
-            dataHistory = [];
-            lastTimestamp = null;
-            dataLists = [];
-            console.log(dataLists);
-            idcount = 1;
-            console.log('Parsed data cleared');
-        }
-
+        
         // Get current time
         function getCurrentTime() {
             const now = new Date();
@@ -1224,16 +1338,21 @@
             
             return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
         }
-
+        
+        // Voice related variables
+        let intervalId = null;
+        let isRunning = false;
+        let idcount = 0;
+        
         // Start timer
         function startTimer() {
             if (!isRunning) {
-                intervalId = setInterval(interSpeakText, 500);
+                intervalId = setInterval(InterSpeakText, 500);
                 isRunning = true;
                 console.log('Timer started');
             }
         }
-
+        
         // Pause timer
         function pauseTimer() {
             if (isRunning) {
@@ -1243,26 +1362,24 @@
                 console.log('Timer paused');
             }
         }
-
-        // Interval function for text-to-speech
-        function interSpeakText() {
+        
+        // Voice announcement
+        function InterSpeakText() { 
             if (speechSynthesis.speaking) return;
-            
+           
             if (dataHistory.length > idcount) {
                 pauseTimer();
                 
-                for (let i = idcount; dataHistory.length >= i; i++) {
-                    const record = dataLists[i - 1];
-                    idcount = i;
-                    speakText(record.name + " " +  parseFloat(record.sec).toFixed(2));
-                    console.log(record.name);
-                }
-                
+                const t = dataLists[idcount]; 
+                speakText(t.name + " " + parseFloat(t.sec).toFixed(2));   
+                idcount++;   
+                console.log(t);            
+             
                 startTimer();
             }
         }
-
-        // Text-to-speech function
+        
+        // Text to speech
         function speakText(text) {
             if (text === '') {
                 alert('Please enter some text!');
@@ -1280,7 +1397,7 @@
                 // Set speech properties
                 utterance.rate = 1;
                 utterance.pitch = 1;
-                utterance.volume = 0.8;
+                utterance.volume = 1;
                 
                 // Play speech
                 window.speechSynthesis.speak(utterance);
@@ -1288,6 +1405,49 @@
                 alert('Sorry, your browser does not support speech synthesis!');
             }
         }
+        
+        // Sound related variables
+        let audioContext;
+        let isPlaying = false;
+        
+        // Initialize audio context
+        function initAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+        
+        // Play beep sound
+        function playBeep() {
+            if (isPlaying) return;
+            
+            initAudioContext();
+            
+            // Create oscillator
+            const oscillator = audioContext.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 800; // 800Hz
+            
+            // Create gain node
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 0.5;
+            
+            // Connect nodes
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // Play sound
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.3); // Stop after 0.3 seconds
+            
+            // Reset status after sound playback ends
+            oscillator.onended = function() {
+                isPlaying = false;               
+            };
+        }
+        
+        // Start timer
+        startTimer();
     </script>
 </body>
 </html>
