@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RC Loop Speed</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        h1 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .card h3 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card h3 .icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-success {
+            background: var(--success);
+        }
+        
+        .btn-success:hover {
+            background: #219653;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .connection-status {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .connected {
+            background: var(--success);
+        }
+        
+        .disconnected {
+            background: var(--danger);
+        }
+        
+        .connecting {
+            background: var(--warning);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .config-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            background: white;
+        }
+        
+        .data-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .data-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .send-section, .receive-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+            margin-bottom: 15px;
+            font-family: monospace;
+        }
+        
+        .receive-box {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            height: 120px;
+            overflow-y: auto;
+            font-family: monospace;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+            font-size: 14px;
+        }
+        
+        .parsed-data-container {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .parsed-data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .parsed-data-table th, .parsed-data-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        .parsed-data-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+        
+        .parsed-data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .log-box {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        
+        .troubleshoot-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .troubleshoot-section h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .simple-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+            transition: all 0.2s;
+        }
+        
+        .simple-btn:hover {
+            background: #2980b9;
+        }
+        
+        .description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .main-action {
+            margin: 40px 0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* 彈窗樣式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+            transition: color 0.3s;
+        }
+        
+        .close-btn:hover {
+            color: #333;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        input:focus {
+            border-color: #2575fc;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(37, 117, 252, 0.2);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .edit-btn {
+            background-color: #ffa502;
+            color: white;
+        }
+        
+        .edit-btn:hover {
+            background-color: #e59400;
+        }
+        
+        .delete-btn {
+            background-color: #ff4757;
+            color: white;
+        }
+        
+        .delete-btn:hover {
+            background-color: #ff3742;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #777;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .user-form {
+            display: grid;
+            grid-template-columns: 1fr 2fr auto;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: end;
+        }
+        
+        @media (max-width: 600px) {
+            .user-form {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .user-form button {
+            white-space: nowrap;
+        }
+        
+        .id-input {
+            max-width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔵 RC Loops Speed</h1>
+        </header>
+        
+        <div class="card">
+            <h3><span class="icon">📊</span> 連接狀態</h3>
+            <div class="connection-status">
+                <div id="status-indicator" class="status-indicator disconnected"></div>
+                <span id="connection-text">未連接</span>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-success" id="connect-btn">
+                    🔌 連接
+                </button>
+            </div>
+            
+            <div id="device-info" class="status info">
+                等待連接設備...
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">🔍</span> 圈速</h3>
+           
+            <div class="parsed-data-container">
+                <table class="parsed-data-table" id="parsed-data-table">
+                    <thead>
+                        <tr>
+                            <th>序號</th>                           
+                            <th>ID</th>
+                            <th>姓名</th>
+                            <th>秒數</th>
+                            <th>現在時間</th>
+                        </tr>
+                    </thead>
+                    <tbody id="parsed-data-body">
+                        <!-- 解析後的資料將在這裡顯示 -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-warning" id="clear-parsed-btn">🗑️ 清空圈速紀錄</button>
+            </div>
+        </div>
+        
+        <div class="status" id="statusMessage"></div>
+        
+        <div class="main-action">
+            <button class="btn" id="editUsersBtn">編輯使用者</button>
+        </div>
+        
+        <div class="card">
+            <div id="status-area"></div>
+        </div>
+    </div>
+    
+    <!-- 編輯使用者彈窗 -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">使用者管理</h3>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="user-form">
+                    <div class="form-group">
+                        <label for="userId">ID</label>
+                        <input type="number" id="userId" class="id-input" placeholder="ID" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="userName">姓名</label>
+                        <input type="text" id="userName" placeholder="輸入使用者名稱">
+                    </div>
+                    <button class="btn btn-success" id="addUserBtn">新增使用者</button>
+                </div>
+                
+                <div id="usersTableContainer">
+                    <table id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>姓名</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- 使用者資料將在這裡動態產生 -->
+                        </tbody>
+                    </table>
+                    <div id="emptyState" class="empty-state">
+                        <i>📊</i>
+                        <p>暫無使用者資料，請新增使用者</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="closeModalBtn">關閉</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 全域變數
+        let port = null;
+        let reader = null;
+        let isConnected = false;
+        let isReading = false;
+        let dataLists = [];
+        let dataHistory = [];
+        let lastTimestamp = null;
+        let db;
+        const dbName = "UserDB";
+        const dbVersion = 1;
+        const storeName = "users";
+        
+        // DOM 元素
+        const connectBtn = document.getElementById('connect-btn');
+        const clearParsedBtn = document.getElementById('clear-parsed-btn');
+        const editUsersBtn = document.getElementById('editUsersBtn');
+        const deviceInfo = document.getElementById('device-info');
+        const statusArea = document.getElementById('status-area');
+        const statusMessage = document.getElementById('statusMessage');
+        const statusIndicator = document.getElementById('status-indicator');
+        const connectionText = document.getElementById('connection-text');
+        const parsedDataBody = document.getElementById('parsed-data-body');
+        
+        // 彈窗相關元素
+        const editModal = document.getElementById('editModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const closeModalBtn2 = document.getElementById('closeModalBtn');
+        const usersTableBody = document.getElementById('usersTableBody');
+        const emptyState = document.getElementById('emptyState');
+        const userIdInput = document.getElementById('userId');
+        const userNameInput = document.getElementById('userName');
+        const addUserBtn = document.getElementById('addUserBtn');
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+            setupEventListeners();
+        });
+        
+        // 初始化系統
+        function init() {
+            console.log('系統初始化開始...');
+            
+            // 檢查瀏覽器支援
+            if (!('serial' in navigator)) {
+                showStatus('❌ 您的瀏覽器不支援 Web Serial API', 'error');
+                connectBtn.disabled = true;
+                console.log('錯誤: 瀏覽器不支援 Web Serial API');
+                return;
+            }
+            
+            console.log('✅ Web Serial API 支援正常');
+            
+            // 檢查是否在安全上下文中
+            if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+                showStatus('⚠️ 建議在 HTTPS 或 localhost 環境下使用', 'warning');
+                console.log('警告: 當前環境非 HTTPS 或 localhost');
+            } else {
+                console.log('✅ 當前環境安全 (HTTPS 或 localhost)');
+            }
+            
+            showStatus('請點擊"連接設備"按鈕選擇您的設備', 'info');
+            console.log('系統初始化完成，等待使用者操作');
+            
+            initDB();
+        }
+        
+        // 設定事件監聽器
+        function setupEventListeners() {
+            // 連接按鈕
+            connectBtn.addEventListener('click', function() {
+                console.log('使用者點擊了連接按鈕');
+                
+                if (!('serial' in navigator)) {
+                    showStatus('❌ 瀏覽器不支援 Web Serial API', 'error');
+                    return;
+                }
+                
+                updateConnectionStatus('connecting', '連接中...');
+                showStatus('正在請求設備權限...', 'info');
+                
+                // 直接請求設備
+                navigator.serial.requestPort()
+                    .then(selectedPort => {
+                        console.log('設備選擇對話框已彈出，使用者選擇了設備');
+                        port = selectedPort;
+                        return connectToPort(port);
+                    })
+                    .then(() => {
+                        console.log('設備連接成功');
+                        showStatus('✅ 設備連接成功！', 'success');
+                        updateConnectionStatus('connected', '已連接');
+                        isConnected = true;
+                        
+                        // 開始讀取資料
+                        startReading();
+                    })
+                    .catch(error => {
+                        console.log(`連接過程中出錯: ${error.message}`);
+                        
+                        if (error.name === 'NotFoundError') {
+                            showStatus('未選擇設備或未找到可用設備', 'info');
+                        } else {
+                            showStatus(`❌ 連接失敗: ${error.message}`, 'error');
+                        }
+                        
+                        updateConnectionStatus('disconnected', '連接失敗');
+                        isConnected = false;
+                        connectBtn.disabled = false;
+                    });
+            });
+            
+            // 清空解析資料
+            clearParsedBtn.addEventListener('click', function() {
+                parsedDataBody.innerHTML = '';
+                dataHistory = [];
+                lastTimestamp = null;
+                dataLists = [];
+                console.log(dataLists);
+                idcount = 1;
+                console.log('已清空解析資料');
+            });
+            
+            // 開啟編輯彈窗
+            editUsersBtn.addEventListener('click', function() {
+                openEditModal();
+            });    
+        
+            // 關閉彈窗
+            closeModalBtn.addEventListener('click', function() {
+                closeModal();
+            });
+            
+            closeModalBtn2.addEventListener('click', function() {
+                closeModal();
+            });
+            
+            // 新增使用者
+            addUserBtn.addEventListener('click', function() {
+                addUser();
+            });
+            
+            // 按Enter鍵新增使用者
+            userNameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addUser();
+                }
+            });
+            
+            userIdInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addUser();
+                }
+            });
+            
+            // 點擊彈窗外部關閉
+            editModal.addEventListener('click', function(e) {
+                if (e.target === editModal) {
+                    closeModal();
+                }
+            });
+            
+            // 頁面卸載時斷開連接
+            window.addEventListener('beforeunload', function() {
+                if (isConnected && port) {
+                    console.log('頁面關閉，正在斷開連接...');
+                    isReading = false;
+                    
+                    if (reader) {
+                        reader.cancel().catch(() => {});
+                    }
+                    
+                    if (port) {
+                        port.close().catch(() => {});
+                    }
+                }
+            });
+        }
+        
+        // 初始化資料庫
+        function initDB() {
+            const request = indexedDB.open(dbName, dbVersion);
+            
+            request.onerror = function(event) {
+                showStatus("無法開啟資料庫: " + event.target.errorCode, 'error');
+            };
+            
+            request.onsuccess = function(event) {
+                db = event.target.result;
+                showStatus("資料庫已成功開啟", 'success');
+                loadAllUsers();
+            };
+            
+            request.onupgradeneeded = function(event) {
+                db = event.target.result;
+                
+                // 建立物件儲存空間（類似於表）
+                if (!db.objectStoreNames.contains(storeName)) {
+                    const objectStore = db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
+                    
+                    // 建立索引
+                    objectStore.createIndex('name', 'name', { unique: false });
+                    objectStore.createIndex('id', 'id', { unique: true });
+                    
+                    showStatus("資料庫已建立/升級", 'success');
+                }
+            };
+        }
+        
+        // 載入所有使用者
+        function loadAllUsers() {
+            const transaction = db.transaction([storeName], 'readonly');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.getAll();
+            
+            request.onsuccess = function() {
+                const users = request.result;
+                displayUsers(users);
+            };
+            
+            request.onerror = function() {
+                showStatus('錯誤: 無法載入使用者資料', 'error');
+            };
+        }
+        
+        // 顯示使用者列表
+        function displayUsers(users) {
+            usersTableBody.innerHTML = '';
+            
+            if (users.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            // 按ID排序
+            users.sort((a, b) => a.id - b.id);
+            
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td class="actions">
+                        <button class="action-btn edit-btn" onclick="editUser(${user.id})">編輯</button>
+                        <button class="action-btn delete-btn" onclick="deleteUser(${user.id})">刪除</button>
+                    </td>
+                `;
+                
+                usersTableBody.appendChild(row);
+            });
+        }
+        
+        // 開啟編輯彈窗
+        function openEditModal() {
+            editModal.style.display = 'flex';
+            loadAllUsers();
+        }
+
+        // 關閉彈窗
+        function closeModal() {
+            editModal.style.display = 'none';
+            userIdInput.value = '';
+            userNameInput.value = '';
+        }
+
+        // 新增使用者
+        function addUser() {
+            const id = parseInt(userIdInput.value);
+            const name = userNameInput.value.trim();
+            
+            if (!id || id <= 0) {
+                showStatus('錯誤: 請輸入有效的ID（正整數）', 'error');
+                return;
+            }
+            
+            if (!name) {
+                showStatus('錯誤: 請輸入使用者名稱', 'error');
+                return;
+            }
+            
+            const user = { id: id, name: name };
+            
+            const transaction = db.transaction([storeName], 'readwrite');
+            const objectStore = transaction.objectStore(storeName);
+            
+            // 先檢查ID是否已存在
+            const checkRequest = objectStore.get(id);
+            
+            checkRequest.onsuccess = function() {
+                if (checkRequest.result) {
+                    showStatus('錯誤: ID已存在，請使用其他ID', 'error');
+                    return;
+                }
+                
+                // ID不存在，可以新增使用者
+                const addRequest = objectStore.add(user);
+                
+                addRequest.onsuccess = function() {
+                    showStatus(`使用者 "${name}" (ID: ${id}) 新增成功`, 'success');
+                    userIdInput.value = '';
+                    userNameInput.value = '';
+                    loadAllUsers();
+                };
+                
+                addRequest.onerror = function() {
+                    showStatus('錯誤: 無法新增使用者', 'error');
+                };
+            };
+            
+            checkRequest.onerror = function() {
+                showStatus('錯誤: 無法檢查ID是否存在', 'error');
+            };
+        }
+
+        // 編輯使用者
+        function editUser(id) {
+            const transaction = db.transaction([storeName], 'readonly');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.get(id);
+            
+            request.onsuccess = function() {
+                const user = request.result;
+                if (user) {
+                    const newName = prompt(`編輯使用者 "${user.name}"：`, user.name);
+                    
+                    if (newName !== null && newName.trim() !== '') {
+                        updateUser(id, newName.trim());
+                    }
+                }
+            };
+            
+            request.onerror = function() {
+                showStatus('錯誤: 無法載入使用者資料', 'error');
+            };
+        }
+
+        // 更新使用者
+        function updateUser(id, newName) {
+            const user = { id: id, name: newName };
+            
+            const transaction = db.transaction([storeName], 'readwrite');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.put(user);
+            
+            request.onsuccess = function() {
+                showStatus('使用者資訊已更新', 'success');
+                loadAllUsers();
+            };
+            
+            request.onerror = function() {
+                showStatus('錯誤: 無法更新使用者資訊', 'error');
+            };
+        }
+
+        // 刪除使用者
+        function deleteUser(id) {
+            const transaction = db.transaction([storeName], 'readonly');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.get(id);
+            
+            request.onsuccess = function() {
+                const user = request.result;
+                if (user && confirm(`確定要刪除使用者 "${user.name}" (ID: ${user.id}) 嗎？`)) {
+                    deleteUserById(id);
+                }
+            };
+        }
+
+        // 執行刪除操作
+        function deleteUserById(id) {
+            const transaction = db.transaction([storeName], 'readwrite');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.delete(id);
+            
+            request.onsuccess = function() {
+                showStatus('使用者已刪除', 'success');
+                loadAllUsers();
+            };
+            
+            request.onerror = function() {
+                showStatus('錯誤: 無法刪除使用者', 'error');
+            };
+        }
+        
+        // 根據ID取得使用者姓名的函數
+        function getUserNameById(id) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject(new Error('資料庫未初始化'));
+                    return;
+                }
+                
+                const transaction = db.transaction([storeName], 'readonly');
+                const objectStore = transaction.objectStore(storeName);
+                const request = objectStore.get(id);
+                
+                request.onsuccess = function() {
+                    if (request.result) {
+                        resolve(request.result.name);
+                    } else {
+                        resolve(null);
+                    }
+                };
+                
+                request.onerror = function() {
+                    reject(new Error('查詢失敗'));
+                };
+            });
+        }
+        
+        // 更新連接狀態顯示
+        function updateConnectionStatus(status, text) {
+            statusIndicator.className = 'status-indicator ' + status;
+            connectionText.textContent = text;
+        }
+        
+        // 顯示狀態訊息
+        function showStatus(message, type, isModal = false) {
+            // 如果是模態框的狀態訊息，使用 statusMessage 元素
+            const targetElement = isModal ? statusMessage : statusArea;
+            
+            // 建立狀態訊息元素
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+            
+            // 清除之前的狀態訊息
+            targetElement.innerHTML = '';
+            targetElement.appendChild(statusDiv);
+            
+            // 如果不是錯誤類型的訊息，3秒後自動隱藏
+            if (type !== 'error') {
+                setTimeout(() => {
+                    if (statusDiv.parentElement) {
+                        statusDiv.style.opacity = '0';
+                        statusDiv.style.transition = 'opacity 0.5s';
+                        setTimeout(() => {
+                            if (statusDiv.parentElement) {
+                                statusDiv.remove();
+                            }
+                        }, 500);
+                    }
+                }, 3000);
+            }
+        }
+        
+        // 連接到端口
+        function connectToPort(port) {
+            console.log('開始配置並連接端口...');
+            
+            // 取得配置參數
+            const baudRate = "57600";
+            const dataBits = "8";
+            const stopBits = "1";
+            const parity = "none";
+            
+            console.log(`使用配置: ${baudRate} baud, ${dataBits} data bits, ${stopBits} stop bits, ${parity} parity`);
+            
+            // 開啟端口
+            return port.open({
+                baudRate: baudRate,
+                dataBits: dataBits,
+                stopBits: stopBits,
+                parity: parity,
+                flowControl: 'none'
+            }).then(() => {
+                console.log('端口開啟成功');
+                
+                const info = port.getInfo();
+                let deviceDetails = ` <strong>狀態:</strong> ✅ 已連接`;                  
+                
+                deviceInfo.innerHTML = deviceDetails;
+            });
+        }
+        var tmpdatalist=[];
+        var timeDiff=0;
+        // 開始讀取資料
+        function startReading() {
+            if (!port || !port.readable) {
+                console.log('錯誤: 端口不可讀');
+                return;
+            }
+            
+            isReading = true;
+            console.log('開始讀取資料循環');
+            
+            var strs = "";
+            const readLoop = () => {
+                if (!isReading || !port.readable) return;
+                
+                reader = port.readable.getReader();
+                
+                reader.read().then(({ value, done }) => {
+                    if (done) {
+                        console.log('讀取完成 (done)');
+                        reader.releaseLock();
+                        return;
+                    }
+                    
+                    // 處理接收到的資料
+                    const decoder = new TextDecoder();
+                    const text = decoder.decode(value);
+                    
+                    strs += text;
+                    
+                    if (strs.includes('\n')) {
+                        // 按行分割資料
+                        const lines = strs.split('\n');
+                        
+                        for (const line of lines) {
+                            const trimmedLine = line.trim();
+                            if (trimmedLine.length > 0 && trimmedLine.length == 33) {
+                                //console.log(`接收到原始資料: ${trimmedLine}`);
+                                var d=trimmedLine.split('\t');
+                                 //console.log(`接收到原始資料: ${d[0]}`);
+                                 var ot=d[0].match(/.{1,2}/g).map(byte => parseInt(byte, 16))
+                                 var num = decodeRC3Telegram(ot);                                 
+                                 if(JSON.stringify(ot) === JSON.stringify(encodeTransponderFull(num, 510, 0))||JSON.stringify(ot) === JSON.stringify(encodeTransponderFull(num, 0, 0))){
+                                    let item = tmpdatalist.find(item => item.id === num);
+                                    if (item) {
+                                        timeDiff=(parseInt(d[1], 16)-item.time)/1000;
+                                        item.time = parseInt(d[1], 16); // 修改time
+                                        if(timeDiff>1){
+                                            playBeep();
+                                            console.log(timeDiff);
+                                        }else{
+                                            continue;
+                                        }
+                                        
+                                        
+                                    } else {
+                                        //新增
+                                        tmpdatalist.push({id:num,time:parseInt(d[1], 16)});
+                                        playBeep();
+                                        console.log("新增成功");
+                                    }
+                                    //console.log(tmpdatalist);
+                                 }else{
+                                    continue;
+                                 }
+                                
+                                //continue;
+                                // 解析資料
+                                //const parsedData = parseData(trimmedLine);
+                                const parsedData={
+                                        raw: "",
+                                        idHex: 0,
+                                        idDecimal: num,
+                                        timestampHex: 0,
+                                        timestampDecimal: 0,
+                                        timeDiff: timeDiff,
+                                        name: ""
+                                    };
+                                if (parsedData) {
+                                    // 更新資料表格
+                                    getUserNameById(num)
+                                    .then(name => {                   
+                                        if (name) {
+                                            parsedData.name = name;
+                                            updateParsedDataTable(parsedData);
+                                            console.log(`分析結果: ID=${parsedData.idDecimal}, 時間差=${parsedData.timeDiff}`);
+                                        } else {
+                                            updateParsedDataTable(parsedData);
+                                        }
+                                        console.log(dataLists);
+                                    });
+                                }
+                            }
+                        }
+                        strs = "";
+                    }
+                    
+                    reader.releaseLock();
+                    
+                    // 繼續讀取
+                    if (isReading) {
+                        readLoop();
+                    }
+                }).catch(error => {
+                    console.log(`讀取錯誤: ${error.message}`);
+                    reader.releaseLock();
+                    
+                    // 如果仍然連接，則繼續讀取
+                    if (isReading && port) {
+                        setTimeout(readLoop, 100);
+                    }
+                });
+            };
+            
+            readLoop();
+        }
+        
+        // 解析資料
+        function parseData(data) {
+            const cleanData = data.trim();
+            
+            // 檢查長度
+            if (cleanData.length < 6) {
+                console.log(`資料長度不足: ${cleanData}`);
+                return null;
+            }
+            
+            // 提取ID (前六個字元)
+            const idHex = cleanData.substring(0, 6);
+            const idDecimal = parseInt(idHex, 16);
+            
+            // 提取時間戳記 (剩餘部分)
+            const timestampHex = cleanData.substring(6);
+            const timestampDecimal = parseInt(timestampHex, 16);
+            
+            // 計算時間差
+            let timeDiff = '-';
+            const t = findLastValidRecord(dataLists, idDecimal);
+            
+            if (t !== null) {
+                timeDiff = (timestampDecimal - t.millisecond) / 4000;
+            }
+            
+            return {
+                raw: cleanData,
+                idHex: idHex,
+                idDecimal: idDecimal,
+                timestampHex: timestampHex,
+                timestampDecimal: timestampDecimal,
+                timeDiff: timeDiff,
+                name: ""
+            };
+        }
+        
+        function findLastValidRecord(dataList, id) {
+            if (!dataList || dataList.length === 0) {
+                return null;
+            }
+            
+            // 從最後一筆開始往前找
+            for (let i = dataList.length - 1; i >= 0; i--) {
+                if (dataList[i].id !== null && dataList[i].id === id) {
+                    return dataList[i];
+                }
+            }
+            
+            return null; // 沒有找到任何有效紀錄
+        }
+        
+        // 更新解析資料表格
+        function updateParsedDataTable(parsedData) {
+            const row = document.createElement('tr');
+    
+            // 序號 - 修改為基於dataHistory長度計算
+            const indexCell = document.createElement('td');
+            indexCell.textContent = dataHistory.length + 1;
+            row.appendChild(indexCell);
+    
+            // ID (10進制)
+            const idDecimalCell = document.createElement('td');
+            idDecimalCell.textContent = parsedData.idDecimal;
+            row.appendChild(idDecimalCell);
+            
+            // 姓名
+            const nameCell = document.createElement('td');
+            nameCell.textContent = parsedData.name;
+            row.appendChild(nameCell);
+            
+            // 時間差
+            const timeDiffCell = document.createElement('td');
+            timeDiffCell.textContent = parsedData.timeDiff;
+            row.appendChild(timeDiffCell);
+    
+            const time = document.createElement('td');
+            time.textContent = getCurrentTime();
+            row.appendChild(time);
+            
+            dataLists.push({
+                id: parsedData.idDecimal,
+                name: parsedData.name,
+                sec: parsedData.timeDiff,
+                millisecond: parsedData.timestampDecimal,
+                nowTime: getCurrentTime()
+            });    
+            
+            playBeep();
+            
+            // 修改這裡：使用insertBefore而不是appendChild，插入到第一個子元素之前
+            if (parsedDataBody.firstChild) {
+                parsedDataBody.insertBefore(row, parsedDataBody.firstChild);
+            } else {
+                parsedDataBody.appendChild(row);
+            }
+    
+            // 儲存 - 修改為新增到陣列開頭
+            dataHistory.unshift(parsedData);
+    
+            // 更新所有行的序號（因為新行插入到開頭會影響所有行的序號）
+            updateRowIndexes();
+    
+            // 保持捲動位置在頂部（可選）
+            parsedDataBody.parentElement.scrollTop = 0;
+        }
+
+        // 新增函數：更新所有行的序號
+        function updateRowIndexes() {
+            const rows = parsedDataBody.querySelectorAll('tr');
+            rows.forEach((row, index) => {
+                row.cells[0].textContent = rows.length - index;
+            });
+        }
+        
+        // 取得目前時間
+        function getCurrentTime() {
+            const now = new Date();
+            
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+        }
+        
+        // 語音相關變數
+        let intervalId = null;
+        let isRunning = false;
+        let idcount = 0;
+        
+        // 啟動計時器
+        function startTimer() {
+            if (!isRunning) {
+                intervalId = setInterval(InterSpeakText, 200);
+                isRunning = true;
+                console.log('計時器已啟動');
+            }
+        }
+        
+        // 暫停計時器
+        function pauseTimer() {
+            if (isRunning) {
+                clearInterval(intervalId);
+                intervalId = null;
+                isRunning = false;
+                console.log('計時器已暫停');
+            }
+        }
+        
+        // 語音播報
+        function InterSpeakText() { 
+            if (speechSynthesis.speaking) return;
+           
+            if (dataHistory.length > idcount) {
+                pauseTimer();
+                
+                const t = dataLists[idcount]; 
+                speakText(t.name + " " + parseFloat(t.sec).toFixed(2));   
+                idcount++;   
+                console.log(t);            
+             
+                startTimer();
+            }
+        }
+        
+        // 文字轉語音
+        function speakText(text) {
+            if (text === '') {
+                alert('請輸入一些文字！');
+                return;
+            }
+            
+            // 使用瀏覽器的語音合成 API
+            if ('speechSynthesis' in window) {
+                // 停止任何正在進行的語音
+                window.speechSynthesis.cancel();
+                
+                // 建立新的語音實例
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // 設定語音屬性
+                utterance.rate = 1;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                // 播放語音
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('抱歉，您的瀏覽器不支援語音合成功能！');
+            }
+        }
+        
+        // 音效相關變數
+        let audioContext;
+        let isPlaying = false;
+        
+        // 初始化音訊上下文
+        function initAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+        
+        // 播放提示音
+        function playBeep() {
+            if (isPlaying) return;
+            
+            initAudioContext();
+            
+            // 建立振盪器
+            const oscillator = audioContext.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 800; // 800Hz
+            
+            // 建立增益節點
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 0.5;
+            
+            // 連接節點
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // 播放聲音
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.3); // 0.3秒後停止
+            
+            // 聲音播放結束後重設狀態
+            oscillator.onended = function() {
+                isPlaying = false;               
+            };
+        }
+        
+        // 啟動計時器
+        startTimer();
+        //https://github.com/mv4wd/RCHourglass
+        // RC3 Transponder Encoding/Decoding Functions
+        function encodeTransponderFull(transponderNumber, statusBits, lastByte) {
+            const TRANSPONDER_PACKET_LENGTH = 12;
+            const POLY = 0x0000776107n; // Use BigInt for polynomial
+            
+            let retValue = new Array(TRANSPONDER_PACKET_LENGTH).fill(0);
+            
+            // Add lastByte to transponderNumber
+            transponderNumber = BigInt(transponderNumber) | (BigInt(lastByte) << 24n);
+            
+            let fflop = 0n, temp = 0n, temp1;
+            let i, j = 0;
+            
+            // First stage: process transponderNumber and statusBits
+            for (i = 0; i < 40; i++) {
+                temp <<= 1n;
+                if (j < 3) {
+                    // Not a status bit
+                    temp |= (transponderNumber & 0x20000000n) >> 29n;
+                    transponderNumber <<= 1n;
+                } else {
+                    // This is a status bit
+                    temp |= (BigInt(statusBits) & 0x0200n) >> 9n;
+                    statusBits = Number(BigInt(statusBits) << 1n); // Convert back to Number for later use
+                }
+                j = (j < 3) ? j + 1 : 0;
+            }
+            
+            j = 0;
+            let k = 2;
+            
+            fflop |= (temp & 0x01n);
+            temp >>= 1n;
+            
+            // Second stage: calculate CRC and fill output array
+            for (i = 0; i < 40; i++) {
+                let bit_in = temp & 0x01n;
+                
+                // Calculate parity (number of 1s in stream)
+                temp1 = fflop & POLY;
+                temp1 ^= temp1 >> 1n;
+                temp1 ^= temp1 >> 2n;
+                temp1 = (temp1 & 0x1111111111111111n) * 0x1111111111111111n;
+                temp1 = (temp1 >> 60n) & 0x01n;
+                
+                if (k >= TRANSPONDER_PACKET_LENGTH) {
+                    // Error case
+                    break;
+                }
+                
+                // Shift and set bits of output byte
+                retValue[k] <<= 1;
+                retValue[k] |= Number(temp1 ^ bit_in);
+                retValue[k] <<= 1;
+                retValue[k] |= Number(temp1 ^ bit_in ^ (fflop & 0x01n));
+                
+                if (j < 3) {
+                    j++;
+                } else {
+                    // New byte every 4 bits
+                    j = 0;
+                    k++;
+                }
+                
+                temp >>= 1n;
+                fflop <<= 1n;
+                fflop |= bit_in;
+            }
+            
+            // Set header bytes
+            retValue[0] = 0xF9;
+            retValue[1] = 0x16;
+            
+            return retValue;
+        }
+        
+        /**
+         * Decodes a RC3 transponder packet (filled with preamble)
+         * @param {number[]} telegram - The telegram byte array (must be length 12)
+         * @returns {number} The decoded transponder number
+         */
+        function decodeRC3Telegram(telegram) {
+            const TRANSPONDER_PACKET_LENGTH = 12;
+            
+            if (!telegram || telegram.length !== TRANSPONDER_PACKET_LENGTH) {
+                throw new Error("Wrong telegram size");
+            }
+            
+            let decoded = 0;
+            
+            // Process all bytes in reverse order except preamble (indices 0-1)
+            for (let k = TRANSPONDER_PACKET_LENGTH - 1; k >= 2; k--) {
+                let digit = telegram[k];
+                
+                // Process 3 pairs of bits from each byte
+                for (let b = 0; b < 3; b++) {
+                    decoded <<= 1;
+                    
+                    // Check if the 2-bit pattern is 0x01 or 0x02
+                    if ((digit & 0x03) === 0x01 || (digit & 0x03) === 0x02) {
+                        decoded |= 1;
+                    }
+                    
+                    digit >>= 2; // Move to the next 2-bit pair
+                }
+            }
+            
+            return decoded >>> 0; // Ensure unsigned 32-bit result
+        }
+        
+        // Example usage
+        // let result = encodeTransponderFull(4747731, 0, 0);
+        // console.log(result);
+    </script>
+</body>
+</html>
