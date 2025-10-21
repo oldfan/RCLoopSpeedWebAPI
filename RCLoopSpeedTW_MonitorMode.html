@@ -746,9 +746,9 @@
                         showStatus('✅ 設備連接成功！', 'success');
                         updateConnectionStatus('connected', '已連接');
                         isConnected = true;
-                        
                         // 開始讀取資料
                         startReading();
+                        sendTextData("monitor mode");
                     })
                     .catch(error => {
                         console.log(`連接過程中出錯: ${error.message}`);
@@ -1129,6 +1129,16 @@
                 
                 deviceInfo.innerHTML = deviceDetails;
             });
+        }
+        async function sendTextData(text) {
+            if (!port) return;
+            
+            const writer = port.writable.getWriter();
+            const data = text + '\n'; // 添加换行符
+            const encoder = new TextEncoder();
+            await writer.write(encoder.encode(data));
+            writer.releaseLock();           
+            
         }
         var tmpdatalist=[];
         var timeDiff=0;
