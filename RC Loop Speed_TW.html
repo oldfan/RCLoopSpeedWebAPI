@@ -697,6 +697,7 @@
     
     <script>
         // 全域變數
+        
         let port = null;
         let reader = null;
         let isConnected = false;
@@ -1290,7 +1291,6 @@
             
             isReading = true;
             console.log('開始讀取資料循環');
-            
             var strs = "";
             const readLoop = () => {
                 if (!isReading || !port.readable) return;
@@ -1310,11 +1310,10 @@
                     
                     strs += text;
                     
-                    if (strs.includes('\n')) {
+                    if (strs.endsWith('\r\n')) {
                         // 按行分割資料
-                        const lines = strs.split('\n');
-                        
-                        for (const line of lines) {
+                        const lines = strs.split('\r\n');
+                        for (const line of lines) {                            
                             const trimmedLine = line.trim();
                             if (trimmedLine.length == 14 && line.split(' ').length<2) {
                                 console.log(`接收到原始資料: ${trimmedLine}`);
@@ -1335,9 +1334,8 @@
                                         console.log(line.length);
                                     });
                                 }
-                            }else if(line.length !=0 ){
-                               
-                                let dts=line.split(' ');
+                            }else if(line.length !=0 ){                               
+                                let dts=line.split(' ');                              
                                 if(dts.length==3 && parseInt(dts[1])){
                                     
                                     rc4List.push({
@@ -1359,8 +1357,9 @@
                                     showStatus("RC4 註冊完成!", 'success');
                                 }
                                 //showStatus(line, 'success');
-                                console.log(line);
+                                
                             }
+                            console.log(line);
                         }
                         strs = "";
                     }
