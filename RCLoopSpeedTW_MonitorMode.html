@@ -1380,60 +1380,91 @@
                         
                         for (const line of lines) {
                             const trimmedLine = line.trim();
+                            var num;
                             if (trimmedLine.length > 0 && trimmedLine.length == 33) {
                                 //console.log(`接收到原始資料: ${trimmedLine}`);
                                 var d=trimmedLine.split('\t');
                                  //console.log(`接收到原始資料: ${d[0]}`);
-                                 if(rc4AddMode && d[0].startsWith("FC0A")){
-                                    
-                                    rc4rxs.push({
+                                if(d[0].startsWith("FC0A")){
+                                    if(rc4AddMode){ //rc4 新增模式
+                                        rc4rxs.push({
                                         id:d[0]
-                                    });
-                                    rc4count++;
-                                    if(rc4count>2000){
-                                        rc4AddMode=false;
-                                        const result = rc4rxs.reduce((acc, item) => {
-                                            const id = item.id;
-                                            acc[id] = (acc[id] || 0) + 1;
-                                            return acc;
-                                        }, {});
+                                        });
+                                        rc4count++;
+                                        if(rc4count>2000){
+                                            rc4AddMode=false;
+                                            const result = rc4rxs.reduce((acc, item) => {
+                                                const id = item.id;
+                                                acc[id] = (acc[id] || 0) + 1;
+                                                return acc;
+                                            }, {});
 
-                                        // 轉換為陣列並排序
-                                        const sortedResult = Object.entries(result)
-                                            .map(([id, count]) => ({ id, count }))
-                                            .sort((a, b) => b.count - a.count)
-                                            .slice(0, 30);
-                                        addNewRC4id(sortedResult);
-                                        //console.log(sortedResult);
-                                    }
-                                    //console.log(rc4rxs);
-                                    continue;
-                                 }
-                                 var ot=d[0].match(/.{1,2}/g).map(byte => parseInt(byte, 16))
-                                 var num = decodeRC3Telegram(ot);                                 
-                                 if(JSON.stringify(ot) === JSON.stringify(encodeTransponderFull(num, 510, 0))||JSON.stringify(ot) === JSON.stringify(encodeTransponderFull(num, 0, 0))){
-                                    let item = tmpdatalist.find(item => item.id === num);
-                                    if (item) {
-                                        timeDiff=(parseInt(d[1], 16)-item.time)/1000;
-                                        item.time = parseInt(d[1], 16); // 修改time
-                                        if(timeDiff>1){
-                                            playBeep();
-                                            console.log(timeDiff);
+                                            // 轉換為陣列並排序
+                                            const sortedResult = Object.entries(result)
+                                                .map(([id, count]) => ({ id, count }))
+                                                .sort((a, b) => b.count - a.count)
+                                                .slice(0, 30);
+                                            addNewRC4id(sortedResult);
+                                            //console.log(sortedResult);
+                                        }
+                                        //console.log(rc4rxs);
+                                        continue;
+                                    }else{
+                                        //RC4 計數
+                                        const rc4item = rc4List.filter(item => item.hex.includes(d[0]));
+                                        if(rc4item.length > 0){
+                                            let item = tmpdatalist.find(item => item.id === rc4item[0].id);
+                                            num=rc4item[0].id;
+                                            if (item) {
+                                                timeDiff=(parseInt(d[1], 16)-item.time)/1000;
+                                                item.time = parseInt(d[1], 16); // 修改time
+                                                if(timeDiff>1){
+                                                    playBeep();
+                                                    console.log(timeDiff);
+                                                }else{
+                                                    continue;
+                                                }
+                                            } else {
+                                                //新增
+                                                tmpdatalist.push({id:rc4item[0].id,time:parseInt(d[1], 16)});
+                                                playBeep();
+                                                console.log("新增成功");
+                                            }
                                         }else{
                                             continue;
                                         }
                                         
-                                        
-                                    } else {
-                                        //新增
-                                        tmpdatalist.push({id:num,time:parseInt(d[1], 16)});
-                                        playBeep();
-                                        console.log("新增成功");
                                     }
-                                    //console.log(tmpdatalist);
-                                 }else{
+                                    
+                                }else{
+                                    var ot=d[0].match(/.{1,2}/g).map(byte => parseInt(byte, 16))
+                                    num = decodeRC3Telegram(ot);                                 
+                                    if(JSON.stringify(ot) === JSON.stringify(encodeTransponderFull(num, 510, 0))||JSON.stringify(ot) === JSON.stringify(encodeTransponderFull(num, 0, 0))){
+                                        let item = tmpdatalist.find(item => item.id === num);
+                                        if (item) {
+                                            timeDiff=(parseInt(d[1], 16)-item.time)/1000;
+                                            item.time = parseInt(d[1], 16); // 修改time
+                                            
+                                            if(timeDiff>1){
+                                                playBeep();
+                                                console.log(timeDiff);
+                                            }else{
+                                                continue;
+                                            }
+                                            
+                                            
+                                        } else {
+                                            //新增
+                                            tmpdatalist.push({id:num,time:parseInt(d[1], 16)});
+                                            playBeep();
+                                            console.log("新增成功");
+                                        }
+                                        //console.log(tmpdatalist);
+                                    }else{
                                     continue;
-                                 }
+                                    }      
+                                }
+                               
                                 
                                 //continue;
                                 // 解析資料
@@ -1449,6 +1480,7 @@
                                     };
                                 if (parsedData) {
                                     // 更新資料表格
+                                    console.log(num);
                                     getUserNameById(num)
                                     .then(name => {                   
                                         if (name) {
