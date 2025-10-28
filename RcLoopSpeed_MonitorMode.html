@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RC Loop Speed</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        h1 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .card h3 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card h3 .icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-success {
+            background: var(--success);
+        }
+        
+        .btn-success:hover {
+            background: #219653;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .connection-status {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .connected {
+            background: var(--success);
+        }
+        
+        .disconnected {
+            background: var(--danger);
+        }
+        
+        .connecting {
+            background: var(--warning);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .config-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            background: white;
+        }
+        
+        .data-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .data-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .send-section, .receive-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+            margin-bottom: 15px;
+            font-family: monospace;
+        }
+        
+        .receive-box {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            height: 120px;
+            overflow-y: auto;
+            font-family: monospace;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+            font-size: 14px;
+        }
+        
+        .parsed-data-container {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .parsed-data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .parsed-data-table th, .parsed-data-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        .parsed-data-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+        
+        .parsed-data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .log-box {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        
+        .troubleshoot-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .troubleshoot-section h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .simple-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+            transition: all 0.2s;
+        }
+        
+        .simple-btn:hover {
+            background: #2980b9;
+        }
+        
+        .description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .main-action {
+            margin: 40px 0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+            transition: color 0.3s;
+        }
+        
+        .close-btn:hover {
+            color: #333;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        input:focus {
+            border-color: #2575fc;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(37, 117, 252, 0.2);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .edit-btn {
+            background-color: #ffa502;
+            color: white;
+        }
+        
+        .edit-btn:hover {
+            background-color: #e59400;
+        }
+        
+        .delete-btn {
+            background-color: #ff4757;
+            color: white;
+        }
+        
+        .delete-btn:hover {
+            background-color: #ff3742;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #777;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .user-form {
+            display: grid;
+            grid-template-columns: 1fr 2fr auto;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: end;
+        }
+        
+        @media (max-width: 600px) {
+            .user-form {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .user-form button {
+            white-space: nowrap;
+        }
+        
+        .id-input {
+            max-width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔵 RC Loops Speed</h1>
+        </header>
+        
+        <div class="card">
+            <h3><span class="icon">📊</span> Connection Status</h3>
+            <div class="connection-status">
+                <div id="status-indicator" class="status-indicator disconnected"></div>
+                <span id="connection-text">Disconnected</span>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-success" id="connect-btn">
+                    🔌 Connect
+                </button>
+            </div>
+            
+            <div id="device-info" class="status info">
+                Waiting for device connection...
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">🔍</span> Lap Times</h3>
+           
+            <div class="parsed-data-container">
+                <table class="parsed-data-table" id="parsed-data-table">
+                    <thead>
+                        <tr>
+                            <th>No.</th>                           
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Seconds</th>
+                            <th>Current Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="parsed-data-body">
+                        <!-- Parsed data will be displayed here -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-warning" id="clear-parsed-btn">🗑️ Clear Lap Records</button>
+            </div>
+        </div>
+        
+        <div class="status" id="statusMessage"></div>
+        
+        <div class="main-action">
+            <button class="btn" id="editUsersBtn">Edit Users</button>
+             <button class="btn" id="addIdsBtn">Add RC4 Transponders</button>
+        </div>
+        
+        <div class="card">
+            <div id="status-area"></div>
+        </div>
+    </div>
+    
+    <!-- Edit Users Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">User Management</h3>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="user-form">
+                    <div class="form-group">
+                        <label for="userId">ID</label>
+                        <input type="number" id="userId" class="id-input" placeholder="ID" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="userName">Name</label>
+                        <input type="text" id="userName" placeholder="Enter user name">
+                    </div>
+                    <button class="btn btn-success" id="addUserBtn">Add User</button>
+                </div>
+                
+                <div id="usersTableContainer">
+                    <table id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- User data will be dynamically generated here -->
+                        </tbody>
+                    </table>
+                    <div id="emptyState" class="empty-state">
+                        <i>📊</i>
+                        <p>No user data available, please add users</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="closeModalBtn">Close</button>
+            </div>
+        </div>
+    </div>
+     <!-- AddRC4 Modal -->
+    <div class="modal" id="RC4Modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit RC4 Transponders</h3>
+                <button class="close-btn" id="closeRC4Modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="user-form">
+                    <div class="form-group">
+                        <label for="userId">ID</label>
+                        <input type="number" id="addRC4Id" class="id-input" placeholder="ID" min="1">
+                    </div>                  
+                    <button class="btn btn-success" id="addRC4Btn">Add RC4 Transponder</button>
+                </div>
+                  <div id="rc4TableContainer">
+                    <table id="rc4Table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rc4TableBody">
+                            <!-- User data will be dynamically generated here -->
+                        </tbody>
+                    </table>
+                    <div id="rc4EmptyState" class="empty-state">
+                        <i>📊</i>
+                        <p>No RC4 transponder data available, please add!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="closeRC4ModalBtn">Close</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Global variables
+        let port = null;
+        let reader = null;
+        let isConnected = false;
+        let isReading = false;
+        let dataLists = [];
+        let rc4List=[];
+        let rc4rxs=[];
+        let rc4AddMode=false;
+        let dataHistory = [];
+        let lastTimestamp = null;
+        let db;
+        const dbName = "UserDB";
+        const dbVersion = 1;
+        const storeName = "users";
+        const storeIdHex = "rc4id";
+        
+        // DOM elements
+        const connectBtn = document.getElementById('connect-btn');
+        const clearParsedBtn = document.getElementById('clear-parsed-btn');
+        const editUsersBtn = document.getElementById('editUsersBtn');
+        const deviceInfo = document.getElementById('device-info');
+        const statusArea = document.getElementById('status-area');
+        const statusMessage = document.getElementById('statusMessage');
+        const statusIndicator = document.getElementById('status-indicator');
+        const connectionText = document.getElementById('connection-text');
+        const parsedDataBody = document.getElementById('parsed-data-body');
+        
+        // Modal related elements
+        const editModal = document.getElementById('editModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const closeModalBtn2 = document.getElementById('closeModalBtn');
+        const usersTableBody = document.getElementById('usersTableBody');
+        const emptyState = document.getElementById('emptyState');
+        const userIdInput = document.getElementById('userId');
+        const userNameInput = document.getElementById('userName');
+        const addUserBtn = document.getElementById('addUserBtn');
+        //RC4 Modal related elements
+        const R4Modal = document.getElementById('RC4Modal');
+        const closeRC4ModalBtn = document.getElementById('closeRC4Modal');
+        const closeRC4ModalBtn2 = document.getElementById('closeRC4ModalBtn');
+        const addRC4Btn = document.getElementById('addRC4Btn');
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+            setupEventListeners();
+        });
+        
+        // Initialize system
+        function init() {
+            console.log('System initialization starting...');
+            
+            // Check browser support
+            if (!('serial' in navigator)) {
+                showStatus('❌ Your browser does not support Web Serial API', 'error');
+                connectBtn.disabled = true;
+                console.log('Error: Browser does not support Web Serial API');
+                return;
+            }
+            
+            console.log('✅ Web Serial API support normal');
+            
+            // Check if in secure context
+            if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+                showStatus('⚠️ Recommended to use in HTTPS or localhost environment', 'warning');
+                console.log('Warning: Current environment is not HTTPS or localhost');
+            } else {
+                console.log('✅ Current environment is secure (HTTPS or localhost)');
+            }
+            
+            showStatus('Please click "Connect Device" button to select your device', 'info');
+            console.log('System initialization complete, waiting for user operation');
+            
+            initDB();
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Connect button
+            connectBtn.addEventListener('click', function() {
+                console.log('User clicked connect button');
+                
+                if (!('serial' in navigator)) {
+                    showStatus('❌ Browser does not support Web Serial API', 'error');
+                    return;
+                }
+                
+                updateConnectionStatus('connecting', 'Connecting...');
+                showStatus('Requesting device permission...', 'info');
+                
+                // Directly request device
+                navigator.serial.requestPort()
+                    .then(selectedPort => {
+                        console.log('Device selection dialog popped up, user selected device');
+                        port = selectedPort;
+                        return connectToPort(port);
+                    })
+                    .then(() => {
+                        console.log('Device connection successful');
+                        showStatus('✅ Device connected successfully!', 'success');
+                        updateConnectionStatus('connected', 'Connected');
+                        isConnected = true;
+                        // Start reading data
+                        startReading();
+                        sendTextData("monitor mode");
+                    })
+                    .catch(error => {
+                        console.log(`Error during connection: ${error.message}`);
+                        
+                        if (error.name === 'NotFoundError') {
+                            showStatus('No device selected or no available device found', 'info');
+                        } else {
+                            showStatus(`❌ Connection failed: ${error.message}`, 'error');
+                        }
+                        
+                        updateConnectionStatus('disconnected', 'Connection failed');
+                        isConnected = false;
+                        connectBtn.disabled = false;
+                    });
+            });
+            
+            // Clear parsed data
+            clearParsedBtn.addEventListener('click', function() {
+                parsedDataBody.innerHTML = '';
+                dataHistory = [];
+                lastTimestamp = null;
+                dataLists = [];
+                console.log(dataLists);
+                idcount = 1;
+                console.log('Parsed data cleared');
+            });
+            
+            // Open User edit modal
+            editUsersBtn.addEventListener('click', function() {
+                openEditModal();
+            });    
+            // Open AddRC4Id modal
+            addIdsBtn.addEventListener('click', function() {
+                console.log(rc4List);
+                openRC4Modal();
+            });   
+            // Close modal
+            closeModalBtn.addEventListener('click', function() {
+                closeModal();
+            });
+            
+            closeModalBtn2.addEventListener('click', function() {
+                closeModal();
+            });
+            // Close modal
+            closeRC4ModalBtn.addEventListener('click', function() {
+                closeModal();
+            });
+            
+            closeRC4ModalBtn2.addEventListener('click', function() {
+                closeModal();
+            });
+            
+            // Add user
+            addUserBtn.addEventListener('click', function() {
+                addUser();
+            });
+            
+            // Press Enter to add user
+            userNameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addUser();
+                }
+            });
+            addRC4Btn.addEventListener('click', function() {
+                addRC4();
+            });
+            userIdInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addUser();
+                }
+            });
+            
+            // Click outside modal to close
+            editModal.addEventListener('click', function(e) {
+                if (e.target === editModal) {
+                    closeModal();
+                }
+            });
+            
+            // Disconnect when page unloads
+            window.addEventListener('beforeunload', function() {
+                if (isConnected && port) {
+                    console.log('Page closing, disconnecting...');
+                    isReading = false;
+                    
+                    if (reader) {
+                        reader.cancel().catch(() => {});
+                    }
+                    
+                    if (port) {
+                        port.close().catch(() => {});
+                    }
+                }
+            });
+        }
+        
+        // Initialize database
+        function initDB() {
+            const request = indexedDB.open(dbName, dbVersion);
+            
+            request.onerror = function(event) {
+                showStatus("Cannot open database: " + event.target.errorCode, 'error');
+            };
+            
+            request.onsuccess = function(event) {
+                db = event.target.result;
+                showStatus("Database opened successfully", 'success');
+                loadAllUsers();
+                loadRc4Hex();
+            };
+            
+            request.onupgradeneeded = function(event) {
+                db = event.target.result;
+                
+                // Create user object store (similar to table)
+                if (!db.objectStoreNames.contains(storeName)) {
+                    const objectStore = db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
+                    
+                    // Create indexes
+                    objectStore.createIndex('name', 'name', { unique: false });
+                    objectStore.createIndex('id', 'id', { unique: true });
+
+                    const rc4Store = db.createObjectStore(storeIdHex, { keyPath: 'id', autoIncrement: true });
+                    
+                    // Create indexes
+                    rc4Store.createIndex('hex', 'hex', { unique: false });
+                    rc4Store.createIndex('id', 'id', { unique: true });
+                    
+                    showStatus("Database created/upgraded", 'success');
+                }              
+            };
+        }
+        // Load all RC4Hex
+        function loadRc4Hex(){
+            const transaction = db.transaction([storeIdHex], 'readonly');
+            const objectStore = transaction.objectStore(storeIdHex);
+            const request = objectStore.getAll();
+            request.onsuccess = function() {
+            rc4List = request.result;
+        };
+           
+        }
+        // Load all users
+        function loadAllUsers() {
+            const transaction = db.transaction([storeName], 'readonly');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.getAll();
+            
+            request.onsuccess = function() {
+                const users = request.result;
+                displayUsers(users);
+            };
+            
+            request.onerror = function() {
+                showStatus('Error: Unable to load user data', 'error');
+            };
+        }
+        
+        // Display user list
+        function displayUsers(users) {
+            usersTableBody.innerHTML = '';
+            
+            if (users.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            // Sort by ID
+            users.sort((a, b) => a.id - b.id);
+            
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td class="actions">
+                        <button class="action-btn edit-btn" onclick="editUser(${user.id})">Edit</button>
+                        <button class="action-btn delete-btn" onclick="deleteUser(${user.id})">Delete</button>
+                    </td>
+                `;
+                
+                usersTableBody.appendChild(row);
+            });
+        }
+        
+        // Open edit modal
+        function openEditModal() {
+            editModal.style.display = 'flex';
+            loadAllUsers();
+        }
+
+        // Close modal
+        function closeModal() {
+            editModal.style.display = 'none';
+            RC4Modal.style.display = 'none';
+            userIdInput.value = '';
+            userNameInput.value = '';
+        }
+
+        // Add user
+        function addUser() {
+            const id = parseInt(userIdInput.value);
+            const name = userNameInput.value.trim();
+            
+            if (!id || id <= 0) {
+                showStatus('Error: Please enter a valid ID (positive integer)', 'error');
+                return;
+            }
+            
+            if (!name) {
+                showStatus('Error: Please enter user name', 'error');
+                return;
+            }
+            
+            const user = { id: id, name: name };
+            
+            const transaction = db.transaction([storeName], 'readwrite');
+            const objectStore = transaction.objectStore(storeName);
+            
+            // First check if ID already exists
+            const checkRequest = objectStore.get(id);
+            
+            checkRequest.onsuccess = function() {
+                if (checkRequest.result) {
+                    showStatus('Error: ID already exists, please use another ID', 'error');
+                    return;
+                }
+                
+                // ID doesn't exist, can add user
+                const addRequest = objectStore.add(user);
+                
+                addRequest.onsuccess = function() {
+                    showStatus(`User "${name}" (ID: ${id}) added successfully`, 'success');
+                    userIdInput.value = '';
+                    userNameInput.value = '';
+                    loadAllUsers();
+                };
+                
+                addRequest.onerror = function() {
+                    showStatus('Error: Unable to add user', 'error');
+                };
+            };
+            
+            checkRequest.onerror = function() {
+                showStatus('Error: Unable to check if ID exists', 'error');
+            };
+        }
+        function addRc4idDB(rc4ids){
+            const id = parseInt(addRC4Id.value);
+            if (!id || id < 2097152  || id > 9999999) {
+                showStatus('Error: Please enter a valid ID >2097152 and < 9999999 (positive integer)', 'error');
+                return;
+            }
+            const hex=rc4ids.map(item => item.id).join(',');
+            console.log(`ids="${hex}";`);
+            
+            const rc4id = { id: id, hex: hex };
+            
+            const transaction = db.transaction([storeIdHex], 'readwrite');
+            const objectStore = transaction.objectStore(storeIdHex);
+            
+            // First check if ID already exists
+            const checkRequest = objectStore.get(id);
+            
+            checkRequest.onsuccess = function() {
+                if (checkRequest.result) {
+                    showStatus('Error: ID already exists, please use another ID', 'error');
+                    return;
+                }
+                
+                // ID doesn't exist, can add user
+                const addRequest = objectStore.add(rc4id);
+                
+                addRequest.onsuccess = function() {
+                    showStatus(`(ID: ${id}) added successfully`, 'success');
+                    userIdInput.value = '';
+                    userNameInput.value = '';
+                    loadAllUsers();
+                };
+                rc4List.push({
+                    id:rc4id.id,
+                    hex:rc4id.hex
+                })
+                addRequest.onerror = function() {
+                    showStatus('Error: Unable to add user', 'error');
+                };
+            };
+            
+            checkRequest.onerror = function() {
+                showStatus('Error: Unable to check if ID exists', 'error');
+            };
+
+        }
+        // Open RC4 ID edit modal
+        function openRC4Modal() {
+            displayRC4List();
+            RC4Modal.style.display = 'flex';
+          
+        }
+        // Display RC4 ID list
+        function displayRC4List(){
+            rc4TableBody.innerHTML = '';
+            if (rc4List.length === 0) {
+                rc4EmptyState.style.display = 'block';
+                return;
+            }
+            rc4EmptyState.style.display = 'none';
+            
+            // Sort by ID
+            //users.sort((a, b) => a.id - b.id);
+            
+            rc4List.forEach(list => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${list.id}</td>
+                    <td class="actions">
+                        <button class="action-btn delete-btn" onclick="deletRC4ID(${list.id})">Delete</button>
+                    </td>
+                `;
+                
+                rc4TableBody.appendChild(row);
+            });
+        }
+        // Edit user
+        function editUser(id) {
+            const transaction = db.transaction([storeName], 'readonly');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.get(id);
+            
+            request.onsuccess = function() {
+                const user = request.result;
+                if (user) {
+                    const newName = prompt(`Edit user "${user.name}":`, user.name);
+                    
+                    if (newName !== null && newName.trim() !== '') {
+                        updateUser(id, newName.trim());
+                    }
+                }
+            };
+            
+            request.onerror = function() {
+                showStatus('Error: Unable to load user data', 'error');
+            };
+        }
+
+        // Update user
+        function updateUser(id, newName) {
+            const user = { id: id, name: newName };
+            
+            const transaction = db.transaction([storeName], 'readwrite');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.put(user);
+            
+            request.onsuccess = function() {
+                showStatus('User information updated', 'success');
+                loadAllUsers();
+            };
+            
+            request.onerror = function() {
+                showStatus('Error: Unable to update user information', 'error');
+            };
+        }
+
+        // Delete user
+        function deleteUser(id) {
+            const transaction = db.transaction([storeName], 'readonly');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.get(id);
+            
+            request.onsuccess = function() {
+                const user = request.result;
+                if (user && confirm(`Are you sure you want to delete user "${user.name}" (ID: ${user.id})?`)) {
+                    deleteUserById(id);
+                }
+            };
+        }
+
+        // Execute delete operation
+        function deleteUserById(id) {
+            const transaction = db.transaction([storeName], 'readwrite');
+            const objectStore = transaction.objectStore(storeName);
+            const request = objectStore.delete(id);
+            
+            request.onsuccess = function() {
+                showStatus('User deleted', 'success');
+                loadAllUsers();
+            };
+            
+            request.onerror = function() {
+                showStatus('Error: Unable to delete user', 'error');
+            };
+        }
+        
+        // Function to get user name by ID
+        function getUserNameById(id) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject(new Error('Database not initialized'));
+                    return;
+                }
+                
+                const transaction = db.transaction([storeName], 'readonly');
+                const objectStore = transaction.objectStore(storeName);
+                const request = objectStore.get(id);
+                
+                request.onsuccess = function() {
+                    if (request.result) {
+                        resolve(request.result.name);
+                    } else {
+                        resolve(null);
+                    }
+                };
+                
+                request.onerror = function() {
+                    reject(new Error('Query failed'));
+                };
+            });
+        }
+        // Delete RC4ID
+        function deletRC4ID(id){
+            if (confirm(`Are you sure you want to remove this RC4 ID "${id}"?`)) {
+                const transaction = db.transaction([storeIdHex], 'readwrite');
+                const objectStore = transaction.objectStore(storeIdHex);
+                const request = objectStore.delete(id);
+            
+                request.onsuccess = function() {
+                    showStatus(`RC4 ID "${id}" deleted`, 'success');
+                    
+                };
+                loadRc4Hex();
+                request.onerror = function() {
+
+                }
+            }
+        }
+        // Add RC4 transponder
+        function addRC4() {
+            const id = parseInt(addRC4Id.value);
+             if (!id || id < 2097152  || id > 9999999) {
+                showStatus('Error: Please enter a valid ID >2097152 and < 9999999 (positive integer)', 'error');
+                return;
+            }
+            rc4AddMode=true;
+            rc4startTimer();
+            
+        }
+        // Update connection status display
+        function updateConnectionStatus(status, text) {
+            statusIndicator.className = 'status-indicator ' + status;
+            connectionText.textContent = text;
+        }
+        
+        // Show status message
+        function showStatus(message, type, isModal = false) {
+            // If it's a modal status message, use statusMessage element
+            const targetElement = isModal ? statusMessage : statusArea;
+            
+            // Create status message element
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+            
+            // Clear previous status message
+            targetElement.innerHTML = '';
+            targetElement.appendChild(statusDiv);
+            
+            // If not error type message, auto hide after 3 seconds
+            if (type !== 'error') {
+                setTimeout(() => {
+                    if (statusDiv.parentElement) {
+                        statusDiv.style.opacity = '0';
+                        statusDiv.style.transition = 'opacity 0.5s';
+                        setTimeout(() => {
+                            if (statusDiv.parentElement) {
+                                statusDiv.remove();
+                            }
+                        }, 500);
+                    }
+                }, 3000);
+            }
+        }
+        
+        // Connect to port
+        function connectToPort(port) {
+            console.log('Starting to configure and connect to port...');
+            
+            // Get configuration parameters
+            const baudRate = "57600";
+            const dataBits = "8";
+            const stopBits = "1";
+            const parity = "none";
+            
+            console.log(`Using configuration: ${baudRate} baud, ${dataBits} data bits, ${stopBits} stop bits, ${parity} parity`);
+            
+            // Open port
+            return port.open({
+                baudRate: baudRate,
+                dataBits: dataBits,
+                stopBits: stopBits,
+                parity: parity,
+                flowControl: 'none'
+            }).then(() => {
+                console.log('Port opened successfully');
+                
+                const info = port.getInfo();
+                let deviceDetails = ` <strong>Status:</strong> ✅ Connected`;                  
+                
+                deviceInfo.innerHTML = deviceDetails;
+            });
+        }
+        async function sendTextData(text) {
+            if (!port) return;
+            
+            const writer = port.writable.getWriter();
+            const data = text + '\n'; // Add newline character
+            const encoder = new TextEncoder();
+            await writer.write(encoder.encode(data));
+            writer.releaseLock();           
+            
+        }
+        // Add RC4 id
+        function addNewRC4id(rc4ids){
+            rc4pauseTimer();
+            if(rc4count>2000){
+                 addRc4idDB(rc4ids);
+                console.log(rc4ids);
+            }
+        }
+         // Add RC4 transponder
+        function addRC4() {
+            const id = parseInt(addRC4Id.value);
+             if (!id || id < 2097152  || id > 9999999) {
+                showStatus('Error: Please enter a valid ID >2097152 and < 9999999 (positive integer)', 'error');
+                return;
+            }
+            rc4ids=[];
+            rc4AddMode=true;
+            rc4startTimer();
+
+            
+        }
+        var tmpdatalist=[];
+        var timeDiff=0;
+        let rc4count=0;
+        
+        // Start reading data
+        function startReading() {
+            if (!port || !port.readable) {
+                console.log('Error: Port not readable');
+                return;
+            }
+            
+            isReading = true;
+            console.log('Starting data reading loop');
+            
+            var strs = "";
+            const readLoop = () => {
+                if (!isReading || !port.readable) return;
+                
+                reader = port.readable.getReader();
+                
+                reader.read().then(({ value, done }) => {
+                    if (done) {
+                        console.log('Reading completed (done)');
+                        reader.releaseLock();
+                        return;
+                    }
+                    
+                    // Process received data
+                    const decoder = new TextDecoder();
+                    const text = decoder.decode(value);
+                    
+                    strs += text;
+                    
+                    if (strs.endsWith('\r\n')) {
+                        // Split data by lines
+                        const lines = strs.split('\r\n');
+                        
+                        for (const line of lines) {
+                            const trimmedLine = line.trim();
+                            var num;
+                            if (trimmedLine.length > 0 && trimmedLine.length == 33) {
+                                //console.log(`Received raw data: ${trimmedLine}`);
+                                var d=trimmedLine.split('\t');
+                                 //console.log(`Received raw data: ${d[0]}`);
+                                if(d[0].startsWith("FC0A")){
+                                    if(rc4AddMode){ //rc4 add mode
+                                        rc4rxs.push({
+                                        id:d[0]
+                                        });
+                                        rc4count++;
+                                        if(rc4count>2000){
+                                            rc4AddMode=false;
+                                            const result = rc4rxs.reduce((acc, item) => {
+                                                const id = item.id;
+                                                acc[id] = (acc[id] || 0) + 1;
+                                                return acc;
+                                            }, {});
+
+                                            // Convert to array and sort
+                                            const sortedResult = Object.entries(result)
+                                                .map(([id, count]) => ({ id, count }))
+                                                .sort((a, b) => b.count - a.count)
+                                                .slice(0, 30);
+                                            addNewRC4id(sortedResult);
+                                            //console.log(sortedResult);
+                                        }
+                                        //console.log(rc4rxs);
+                                        continue;
+                                    }else{
+                                        //RC4 counting
+                                        const rc4item = rc4List.filter(item => item.hex.includes(d[0]));
+                                        if(rc4item.length > 0){
+                                            let item = tmpdatalist.find(item => item.id === rc4item[0].id);
+                                            num=rc4item[0].id;
+                                            if (item) {
+                                                timeDiff=(parseInt(d[1], 16)-item.time)/1000;
+                                                item.time = parseInt(d[1], 16); // Modify time
+                                                if(timeDiff>1){
+                                                    playBeep();
+                                                    console.log(timeDiff);
+                                                }else{
+                                                    continue;
+                                                }
+                                            } else {
+                                                //Add new
+                                                tmpdatalist.push({id:rc4item[0].id,time:parseInt(d[1], 16)});
+                                                playBeep();
+                                                console.log("Added successfully");
+                                            }
+                                        }else{
+                                            continue;
+                                        }
+                                        
+                                    }
+                                    
+                                }else{
+                                    var ot=d[0].match(/.{1,2}/g).map(byte => parseInt(byte, 16))
+                                    num = decodeRC3Telegram(ot);                                 
+                                    if(JSON.stringify(ot) === JSON.stringify(encodeTransponderFull(num, 510, 0))||JSON.stringify(ot) === JSON.stringify(encodeTransponderFull(num, 0, 0))){
+                                        let item = tmpdatalist.find(item => item.id === num);
+                                        if (item) {
+                                            timeDiff=(parseInt(d[1], 16)-item.time)/1000;
+                                            item.time = parseInt(d[1], 16); // Modify time
+                                            
+                                            if(timeDiff>1){
+                                                playBeep();
+                                                console.log(timeDiff);
+                                            }else{
+                                                continue;
+                                            }
+                                            
+                                            
+                                        } else {
+                                            //Add new
+                                            tmpdatalist.push({id:num,time:parseInt(d[1], 16)});
+                                            playBeep();
+                                            console.log("Added successfully");
+                                        }
+                                        //console.log(tmpdatalist);
+                                    }else{
+                                    continue;
+                                    }      
+                                }
+                               
+                                
+                                //continue;
+                                // Parse data
+                                //const parsedData = parseData(trimmedLine);
+                                const parsedData={
+                                        raw: "",
+                                        idHex: 0,
+                                        idDecimal: num,
+                                        timestampHex: 0,
+                                        timestampDecimal: 0,
+                                        timeDiff: timeDiff,
+                                        name: ""
+                                    };
+                                if (parsedData) {
+                                    // Update data table
+                                    console.log(num);
+                                    getUserNameById(num)
+                                    .then(name => {                   
+                                        if (name) {
+                                            parsedData.name = name;
+                                            updateParsedDataTable(parsedData);
+                                            console.log(`Analysis result: ID=${parsedData.idDecimal}, Time difference=${parsedData.timeDiff}`);
+                                        } else {
+                                            updateParsedDataTable(parsedData);
+                                        }
+                                        console.log(dataLists);
+                                    });
+                                }
+                            }
+                        }
+                        strs = "";
+                    }
+                    
+                    reader.releaseLock();
+                    
+                    // Continue reading
+                    if (isReading) {
+                        readLoop();
+                    }
+                }).catch(error => {
+                    console.log(`Read error: ${error.message}`);
+                    reader.releaseLock();
+                    
+                    // If still connected, continue reading
+                    if (isReading && port) {
+                        setTimeout(readLoop, 100);
+                    }
+                });
+            };
+            
+            readLoop();
+        }
+        
+        // Parse data
+        function parseData(data) {
+            const cleanData = data.trim();
+            
+            // Check length
+            if (cleanData.length < 6) {
+                console.log(`Data length insufficient: ${cleanData}`);
+                return null;
+            }
+            
+            // Extract ID (first six characters)
+            const idHex = cleanData.substring(0, 6);
+            const idDecimal = parseInt(idHex, 16);
+            
+            // Extract timestamp (remaining part)
+            const timestampHex = cleanData.substring(6);
+            const timestampDecimal = parseInt(timestampHex, 16);
+            
+            // Calculate time difference
+            let timeDiff = '-';
+            const t = findLastValidRecord(dataLists, idDecimal);
+            
+            if (t !== null) {
+                timeDiff = (timestampDecimal - t.millisecond) / 4000;
+            }
+            
+            return {
+                raw: cleanData,
+                idHex: idHex,
+                idDecimal: idDecimal,
+                timestampHex: timestampHex,
+                timestampDecimal: timestampDecimal,
+                timeDiff: timeDiff,
+                name: ""
+            };
+        }
+        
+        function findLastValidRecord(dataList, id) {
+            if (!dataList || dataList.length === 0) {
+                return null;
+            }
+            
+            // Search from last record forward
+            for (let i = dataList.length - 1; i >= 0; i--) {
+                if (dataList[i].id !== null && dataList[i].id === id) {
+                    return dataList[i];
+                }
+            }
+            
+            return null; // No valid record found
+        }
+        
+        // Update parsed data table
+        function updateParsedDataTable(parsedData) {
+            const row = document.createElement('tr');
+    
+            // Serial number - modified to calculate based on dataHistory length
+            const indexCell = document.createElement('td');
+            indexCell.textContent = dataHistory.length + 1;
+            row.appendChild(indexCell);
+    
+            // ID (decimal)
+            const idDecimalCell = document.createElement('td');
+            idDecimalCell.textContent = parsedData.idDecimal;
+            row.appendChild(idDecimalCell);
+            
+            // Name
+            const nameCell = document.createElement('td');
+            nameCell.textContent = parsedData.name;
+            row.appendChild(nameCell);
+            
+            // Time difference
+            const timeDiffCell = document.createElement('td');
+            timeDiffCell.textContent = parsedData.timeDiff;
+            row.appendChild(timeDiffCell);
+    
+            const time = document.createElement('td');
+            time.textContent = getCurrentTime();
+            row.appendChild(time);
+            
+            dataLists.push({
+                id: parsedData.idDecimal,
+                name: parsedData.name,
+                sec: parsedData.timeDiff,
+                millisecond: parsedData.timestampDecimal,
+                nowTime: getCurrentTime()
+            });    
+            
+            playBeep();
+            
+            // Modified here: use insertBefore instead of appendChild, insert before first child element
+            if (parsedDataBody.firstChild) {
+                parsedDataBody.insertBefore(row, parsedDataBody.firstChild);
+            } else {
+                parsedDataBody.appendChild(row);
+            }
+    
+            // Save - modified to add to beginning of array
+            dataHistory.unshift(parsedData);
+    
+            // Update all row indexes (because inserting new row at beginning affects all row indexes)
+            updateRowIndexes();
+    
+            // Keep scroll position at top (optional)
+            parsedDataBody.parentElement.scrollTop = 0;
+        }
+
+        // New function: update all row indexes
+        function updateRowIndexes() {
+            const rows = parsedDataBody.querySelectorAll('tr');
+            rows.forEach((row, index) => {
+                row.cells[0].textContent = rows.length - index;
+            });
+        }
+        
+        // Get current time
+        function getCurrentTime() {
+            const now = new Date();
+            
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+        }
+        
+        // Voice related variables
+        let intervalId = null;
+        let isRunning = false;
+        let idcount = 0;
+        
+        // Start timer
+        function startTimer() {
+            if (!isRunning) {
+                intervalId = setInterval(InterSpeakText, 200);
+                isRunning = true;
+                console.log('Timer started');
+            }
+        }
+        
+        // Pause timer
+        function pauseTimer() {
+            if (isRunning) {
+                clearInterval(intervalId);
+                intervalId = null;
+                isRunning = false;
+                console.log('Timer paused');
+            }
+        }
+        
+        // Voice announcement
+        function InterSpeakText() { 
+            if (speechSynthesis.speaking) return;
+           
+            if (dataHistory.length > idcount) {
+                pauseTimer();
+                
+                const t = dataLists[idcount]; 
+                speakText(t.name + " " + parseFloat(t.sec).toFixed(2));   
+                idcount++;   
+                console.log(t);            
+             
+                startTimer();
+            }
+        }
+        
+        // Text to speech
+        function speakText(text) {
+            if (text === '') {
+                alert('Please enter some text!');
+                return;
+            }
+            
+            // Use browser's speech synthesis API
+            if ('speechSynthesis' in window) {
+                // Stop any ongoing speech
+                window.speechSynthesis.cancel();
+                
+                // Create new speech instance
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Set speech properties
+                utterance.rate = 1;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                // Play speech
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Sorry, your browser does not support speech synthesis!');
+            }
+        }
+        
+        // Sound effect related variables
+        let audioContext;
+        let isPlaying = false;
+        
+        // Initialize audio context
+        function initAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+        
+        // Play notification sound
+        function playBeep() {
+            if (isPlaying) return;
+            
+            initAudioContext();
+            
+            // Create oscillator
+            const oscillator = audioContext.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 800; // 800Hz
+            
+            // Create gain node
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 0.5;
+            
+            // Connect nodes
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // Play sound
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.3); // Stop after 0.3 seconds
+            
+            // Reset status after sound playback ends
+            oscillator.onended = function() {
+                isPlaying = false;               
+            };
+        }
+        //RC4 Add ID Timer
+         // Start timer
+         let rc4isRunning=false;
+         let rc4intervalId = null;
+        function rc4startTimer() {
+            if (!rc4isRunning) {
+                rc4intervalId = setInterval(rc4stop, 10000);
+                rc4isRunning = true;
+                console.log('Timer started');
+            }
+        }
+        function rc4stop(){
+            rc4pauseTimer();
+            rc4AddMode=false;
+            rc4count=0;
+            alert("RC4 ID addition failed!");
+        }
+        // rc4 pause timer
+        function rc4pauseTimer() {
+            if (rc4isRunning) {
+                clearInterval(rc4intervalId);
+                rc4intervalId = null;
+                rc4isRunning = false;
+                console.log('Timer paused');
+            }
+        }
+        // Start timer
+        startTimer();
+        //https://github.com/mv4wd/RCHourglass
+        // RC3 Transponder Encoding/Decoding Functions
+        function encodeTransponderFull(transponderNumber, statusBits, lastByte) {
+            const TRANSPONDER_PACKET_LENGTH = 12;
+            const POLY = 0x0000776107n; // Use BigInt for polynomial
+            
+            let retValue = new Array(TRANSPONDER_PACKET_LENGTH).fill(0);
+            
+            // Add lastByte to transponderNumber
+            transponderNumber = BigInt(transponderNumber) | (BigInt(lastByte) << 24n);
+            
+            let fflop = 0n, temp = 0n, temp1;
+            let i, j = 0;
+            
+            // First stage: process transponderNumber and statusBits
+            for (i = 0; i < 40; i++) {
+                temp <<= 1n;
+                if (j < 3) {
+                    // Not a status bit
+                    temp |= (transponderNumber & 0x20000000n) >> 29n;
+                    transponderNumber <<= 1n;
+                } else {
+                    // This is a status bit
+                    temp |= (BigInt(statusBits) & 0x0200n) >> 9n;
+                    statusBits = Number(BigInt(statusBits) << 1n); // Convert back to Number for later use
+                }
+                j = (j < 3) ? j + 1 : 0;
+            }
+            
+            j = 0;
+            let k = 2;
+            
+            fflop |= (temp & 0x01n);
+            temp >>= 1n;
+            
+            // Second stage: calculate CRC and fill output array
+            for (i = 0; i < 40; i++) {
+                let bit_in = temp & 0x01n;
+                
+                // Calculate parity (number of 1s in stream)
+                temp1 = fflop & POLY;
+                temp1 ^= temp1 >> 1n;
+                temp1 ^= temp1 >> 2n;
+                temp1 = (temp1 & 0x1111111111111111n) * 0x1111111111111111n;
+                temp1 = (temp1 >> 60n) & 0x01n;
+                
+                if (k >= TRANSPONDER_PACKET_LENGTH) {
+                    // Error case
+                    break;
+                }
+                
+                // Shift and set bits of output byte
+                retValue[k] <<= 1;
+                retValue[k] |= Number(temp1 ^ bit_in);
+                retValue[k] <<= 1;
+                retValue[k] |= Number(temp1 ^ bit_in ^ (fflop & 0x01n));
+                
+                if (j < 3) {
+                    j++;
+                } else {
+                    // New byte every 4 bits
+                    j = 0;
+                    k++;
+                }
+                
+                temp >>= 1n;
+                fflop <<= 1n;
+                fflop |= bit_in;
+            }
+            
+            // Set header bytes
+            retValue[0] = 0xF9;
+            retValue[1] = 0x16;
+            
+            return retValue;
+        }
+        
+        /**
+         * Decodes a RC3 transponder packet (filled with preamble)
+         * @param {number[]} telegram - The telegram byte array (must be length 12)
+         * @returns {number} The decoded transponder number
+         */
+        function decodeRC3Telegram(telegram) {
+            const TRANSPONDER_PACKET_LENGTH = 12;
+            
+            if (!telegram || telegram.length !== TRANSPONDER_PACKET_LENGTH) {
+                throw new Error("Wrong telegram size");
+            }
+            
+            let decoded = 0;
+            
+            // Process all bytes in reverse order except preamble (indices 0-1)
+            for (let k = TRANSPONDER_PACKET_LENGTH - 1; k >= 2; k--) {
+                let digit = telegram[k];
+                
+                // Process 3 pairs of bits from each byte
+                for (let b = 0; b < 3; b++) {
+                    decoded <<= 1;
+                    
+                    // Check if the 2-bit pattern is 0x01 or 0x02
+                    if ((digit & 0x03) === 0x01 || (digit & 0x03) === 0x02) {
+                        decoded |= 1;
+                    }
+                    
+                    digit >>= 2; // Move to the next 2-bit pair
+                }
+            }
+            
+            return decoded >>> 0; // Ensure unsigned 32-bit result
+        }
+        
+        // Example usage
+        // let result = encodeTransponderFull(4747731, 0, 0);
+        // console.log(result);
+    </script>
+</body>
+</html>
