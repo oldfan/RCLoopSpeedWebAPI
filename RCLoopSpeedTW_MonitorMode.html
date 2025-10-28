@@ -599,6 +599,7 @@
         
         <div class="main-action">
             <button class="btn" id="editUsersBtn">編輯使用者</button>
+             <button class="btn" id="addIdsBtn">新增RC4應答器</button>
         </div>
         
         <div class="card">
@@ -650,7 +651,44 @@
             </div>
         </div>
     </div>
-    
+     <!-- AddRC4彈窗 -->
+    <div class="modal" id="RC4Modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">編輯 RC4 應答器</h3>
+                <button class="close-btn" id="closeRC4Modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="user-form">
+                    <div class="form-group">
+                        <label for="userId">ID</label>
+                        <input type="number" id="addRC4Id" class="id-input" placeholder="ID" min="1">
+                    </div>                  
+                    <button class="btn btn-success" id="addRC4Btn">新增 RC4 應答器</button>
+                </div>
+                  <div id="rc4TableContainer">
+                    <table id="rc4Table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rc4TableBody">
+                            <!-- 使用者資料將在這裡動態產生 -->
+                        </tbody>
+                    </table>
+                    <div id="rc4EmptyState" class="empty-state">
+                        <i>📊</i>
+                        <p>暫無 RC4 應答器資料，請新增!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="closeRC4ModalBtn">關閉</button>
+            </div>
+        </div>
+    </div>
     <script>
         // 全域變數
         let port = null;
@@ -658,12 +696,16 @@
         let isConnected = false;
         let isReading = false;
         let dataLists = [];
+        let rc4List=[];
+        let rc4rxs=[];
+        let rc4AddMode=false;
         let dataHistory = [];
         let lastTimestamp = null;
         let db;
         const dbName = "UserDB";
         const dbVersion = 1;
         const storeName = "users";
+        const storeIdHex = "rc4id";
         
         // DOM 元素
         const connectBtn = document.getElementById('connect-btn');
@@ -685,7 +727,11 @@
         const userIdInput = document.getElementById('userId');
         const userNameInput = document.getElementById('userName');
         const addUserBtn = document.getElementById('addUserBtn');
-        
+        //RC4 彈窗相關元素
+        const R4Modal = document.getElementById('RC4Modal');
+        const closeRC4ModalBtn = document.getElementById('closeRC4Modal');
+        const closeRC4ModalBtn2 = document.getElementById('closeRC4ModalBtn');
+        const addRC4Btn = document.getElementById('addRC4Btn');
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             init();
@@ -776,17 +822,29 @@
                 console.log('已清空解析資料');
             });
             
-            // 開啟編輯彈窗
+            // 開啟User編輯彈窗
             editUsersBtn.addEventListener('click', function() {
                 openEditModal();
             });    
-        
+            // 開啟AddRC4Id彈窗
+            addIdsBtn.addEventListener('click', function() {
+                console.log(rc4List);
+                openRC4Modal();
+            });   
             // 關閉彈窗
             closeModalBtn.addEventListener('click', function() {
                 closeModal();
             });
             
             closeModalBtn2.addEventListener('click', function() {
+                closeModal();
+            });
+            // 關閉彈窗
+            closeRC4ModalBtn.addEventListener('click', function() {
+                closeModal();
+            });
+            
+            closeRC4ModalBtn2.addEventListener('click', function() {
                 closeModal();
             });
             
@@ -801,7 +859,9 @@
                     addUser();
                 }
             });
-            
+            addRC4Btn.addEventListener('click', function() {
+                addRC4();
+            });
             userIdInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     addUser();
@@ -844,24 +904,40 @@
                 db = event.target.result;
                 showStatus("資料庫已成功開啟", 'success');
                 loadAllUsers();
+                loadRc4Hex();
             };
             
             request.onupgradeneeded = function(event) {
                 db = event.target.result;
                 
-                // 建立物件儲存空間（類似於表）
+                // 建立user物件儲存空間（類似於表）
                 if (!db.objectStoreNames.contains(storeName)) {
                     const objectStore = db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
                     
                     // 建立索引
                     objectStore.createIndex('name', 'name', { unique: false });
                     objectStore.createIndex('id', 'id', { unique: true });
+
+                    const rc4Store = db.createObjectStore(storeIdHex, { keyPath: 'id', autoIncrement: true });
+                    
+                    // 建立索引
+                    rc4Store.createIndex('hex', 'hex', { unique: false });
+                    rc4Store.createIndex('id', 'id', { unique: true });
                     
                     showStatus("資料庫已建立/升級", 'success');
-                }
+                }              
             };
         }
-        
+        //載入所有RC4Hex
+        function loadRc4Hex(){
+            const transaction = db.transaction([storeIdHex], 'readonly');
+            const objectStore = transaction.objectStore(storeIdHex);
+            const request = objectStore.getAll();
+            request.onsuccess = function() {
+            rc4List = request.result;
+        };
+           
+        }
         // 載入所有使用者
         function loadAllUsers() {
             const transaction = db.transaction([storeName], 'readonly');
@@ -917,6 +993,7 @@
         // 關閉彈窗
         function closeModal() {
             editModal.style.display = 'none';
+            RC4Modal.style.display = 'none';
             userIdInput.value = '';
             userNameInput.value = '';
         }
@@ -969,7 +1046,83 @@
                 showStatus('錯誤: 無法檢查ID是否存在', 'error');
             };
         }
+        function addRc4idDB(rc4ids){
+            const id = parseInt(addRC4Id.value);
+            if (!id || id < 2097152  || id > 9999999) {
+                showStatus('錯誤: 請輸入有效的ID >2097152 and < 9999999（正整數）', 'error');
+                return;
+            }
+            const hex=rc4ids.map(item => item.id).join(',');
+            console.log(`ids="${hex}";`);
+            
+            const rc4id = { id: id, hex: hex };
+            
+            const transaction = db.transaction([storeIdHex], 'readwrite');
+            const objectStore = transaction.objectStore(storeIdHex);
+            
+            // 先檢查ID是否已存在
+            const checkRequest = objectStore.get(id);
+            
+            checkRequest.onsuccess = function() {
+                if (checkRequest.result) {
+                    showStatus('錯誤: ID已存在，請使用其他ID', 'error');
+                    return;
+                }
+                
+                // ID不存在，可以新增使用者
+                const addRequest = objectStore.add(rc4id);
+                
+                addRequest.onsuccess = function() {
+                    showStatus(`(ID: ${id}) 新增成功`, 'success');
+                    userIdInput.value = '';
+                    userNameInput.value = '';
+                    loadAllUsers();
+                };
+                rc4List.push({
+                    id:rc4id.id,
+                    hex:rc4id.hex
+                })
+                addRequest.onerror = function() {
+                    showStatus('錯誤: 無法新增使用者', 'error');
+                };
+            };
+            
+            checkRequest.onerror = function() {
+                showStatus('錯誤: 無法檢查ID是否存在', 'error');
+            };
 
+        }
+        // 開啟 RC4 ID 編輯彈窗
+        function openRC4Modal() {
+            displayRC4List();
+            RC4Modal.style.display = 'flex';
+          
+        }
+        // 顯示RC4 ID 列表
+        function displayRC4List(){
+            rc4TableBody.innerHTML = '';
+            if (rc4List.length === 0) {
+                rc4EmptyState.style.display = 'block';
+                return;
+            }
+            rc4EmptyState.style.display = 'none';
+            
+            // 按ID排序
+            //users.sort((a, b) => a.id - b.id);
+            
+            rc4List.forEach(list => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${list.id}</td>
+                    <td class="actions">
+                        <button class="action-btn delete-btn" onclick="deletRC4ID(${list.id})">刪除</button>
+                    </td>
+                `;
+                
+                rc4TableBody.appendChild(row);
+            });
+        }
         // 編輯使用者
         function editUser(id) {
             const transaction = db.transaction([storeName], 'readonly');
@@ -1065,7 +1218,34 @@
                 };
             });
         }
-        
+        //刪除RC4ID
+        function deletRC4ID(id){
+            if (confirm(`確定要移除該 RC4 ID "${id}" 嗎？`)) {
+                const transaction = db.transaction([storeIdHex], 'readwrite');
+                const objectStore = transaction.objectStore(storeIdHex);
+                const request = objectStore.delete(id);
+            
+                request.onsuccess = function() {
+                    showStatus(`RC4 ID "${id}"已刪除`, 'success');
+                    
+                };
+                loadRc4Hex();
+                request.onerror = function() {
+
+                }
+            }
+        }
+        // 新增RC4 應答器
+        function addRC4() {
+            const id = parseInt(addRC4Id.value);
+             if (!id || id < 2097152  || id > 9999999) {
+                showStatus('錯誤: 請輸入有效的ID >2097152 and < 9999999（正整數）', 'error');
+                return;
+            }
+            rc4AddMode=true;
+            rc4startTimer();
+            
+        }
         // 更新連接狀態顯示
         function updateConnectionStatus(status, text) {
             statusIndicator.className = 'status-indicator ' + status;
@@ -1140,8 +1320,31 @@
             writer.releaseLock();           
             
         }
+        //新增RC4 id
+        function addNewRC4id(rc4ids){
+            rc4pauseTimer();
+            if(rc4count>2000){
+                 addRc4idDB(rc4ids);
+                console.log(rc4ids);
+            }
+        }
+         // 新增RC4 應答器
+        function addRC4() {
+            const id = parseInt(addRC4Id.value);
+             if (!id || id < 2097152  || id > 9999999) {
+                showStatus('錯誤: 請輸入有效的ID >2097152 and < 9999999（正整數）', 'error');
+                return;
+            }
+            rc4ids=[];
+            rc4AddMode=true;
+            rc4startTimer();
+
+            
+        }
         var tmpdatalist=[];
         var timeDiff=0;
+        let rc4count=0;
+        
         // 開始讀取資料
         function startReading() {
             if (!port || !port.readable) {
@@ -1171,9 +1374,9 @@
                     
                     strs += text;
                     
-                    if (strs.includes('\n')) {
+                    if (strs.endsWith('\r\n')) {
                         // 按行分割資料
-                        const lines = strs.split('\n');
+                        const lines = strs.split('\r\n');
                         
                         for (const line of lines) {
                             const trimmedLine = line.trim();
@@ -1181,6 +1384,31 @@
                                 //console.log(`接收到原始資料: ${trimmedLine}`);
                                 var d=trimmedLine.split('\t');
                                  //console.log(`接收到原始資料: ${d[0]}`);
+                                 if(rc4AddMode && d[0].startsWith("FC0A")){
+                                    
+                                    rc4rxs.push({
+                                        id:d[0]
+                                    });
+                                    rc4count++;
+                                    if(rc4count>2000){
+                                        rc4AddMode=false;
+                                        const result = rc4rxs.reduce((acc, item) => {
+                                            const id = item.id;
+                                            acc[id] = (acc[id] || 0) + 1;
+                                            return acc;
+                                        }, {});
+
+                                        // 轉換為陣列並排序
+                                        const sortedResult = Object.entries(result)
+                                            .map(([id, count]) => ({ id, count }))
+                                            .sort((a, b) => b.count - a.count)
+                                            .slice(0, 30);
+                                        addNewRC4id(sortedResult);
+                                        //console.log(sortedResult);
+                                    }
+                                    //console.log(rc4rxs);
+                                    continue;
+                                 }
                                  var ot=d[0].match(/.{1,2}/g).map(byte => parseInt(byte, 16))
                                  var num = decodeRC3Telegram(ot);                                 
                                  if(JSON.stringify(ot) === JSON.stringify(encodeTransponderFull(num, 510, 0))||JSON.stringify(ot) === JSON.stringify(encodeTransponderFull(num, 0, 0))){
@@ -1493,7 +1721,32 @@
                 isPlaying = false;               
             };
         }
-        
+        //RC4 增加 ID 計時器
+         // 啟動計時器
+         let rc4isRunning=false;
+         let rc4intervalId = null;
+        function rc4startTimer() {
+            if (!rc4isRunning) {
+                rc4intervalId = setInterval(rc4stop, 10000);
+                rc4isRunning = true;
+                console.log('計時器已啟動');
+            }
+        }
+        function rc4stop(){
+            rc4pauseTimer();
+            rc4AddMode=false;
+            rc4count=0;
+            alert("RC4 ID 新增失敗!");
+        }
+        // rc4 暫停計時器
+        function rc4pauseTimer() {
+            if (rc4isRunning) {
+                clearInterval(rc4intervalId);
+                rc4intervalId = null;
+                rc4isRunning = false;
+                console.log('計時器已暫停');
+            }
+        }
         // 啟動計時器
         startTimer();
         //https://github.com/mv4wd/RCHourglass
