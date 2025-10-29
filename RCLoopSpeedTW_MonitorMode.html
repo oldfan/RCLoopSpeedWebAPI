@@ -703,7 +703,7 @@
         let lastTimestamp = null;
         let db;
         const dbName = "UserDB";
-        const dbVersion = 1;
+        const dbVersion = 2;
         const storeName = "users";
         const storeIdHex = "rc4id";
         
@@ -916,16 +916,17 @@
                     
                     // 建立索引
                     objectStore.createIndex('name', 'name', { unique: false });
-                    objectStore.createIndex('id', 'id', { unique: true });
-
-                    const rc4Store = db.createObjectStore(storeIdHex, { keyPath: 'id', autoIncrement: true });
+                    objectStore.createIndex('id', 'id', { unique: true });                  
                     
+                    showStatus("資料庫已建立/升級", 'success');
+                }       
+                if(!db.objectStoreNames.contains(storeIdHex)){
+                    const rc4Store = db.createObjectStore(storeIdHex, { keyPath: 'id', autoIncrement: true });                    
                     // 建立索引
                     rc4Store.createIndex('hex', 'hex', { unique: false });
                     rc4Store.createIndex('id', 'id', { unique: true });
-                    
                     showStatus("資料庫已建立/升級", 'success');
-                }              
+                }
             };
         }
         //載入所有RC4Hex
@@ -1759,7 +1760,7 @@
          let rc4intervalId = null;
         function rc4startTimer() {
             if (!rc4isRunning) {
-                rc4intervalId = setInterval(rc4stop, 10000);
+                rc4intervalId = setInterval(rc4stop, 15000);
                 rc4isRunning = true;
                 console.log('計時器已啟動');
             }
