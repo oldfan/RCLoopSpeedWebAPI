@@ -745,7 +745,7 @@
         
         // Initialize system
         function init() {
-            console.log('System initialization started...');
+            console.log('System initialization starting...');
             
             // Check browser support
             if (!('serial' in navigator)) {
@@ -762,11 +762,11 @@
                 showStatus('⚠️ Recommended to use in HTTPS or localhost environment', 'warning');
                 console.log('Warning: Current environment is not HTTPS or localhost');
             } else {
-                console.log('✅ Current environment is secure (HTTPS or localhost)');
+                console.log('✅ Current environment secure (HTTPS or localhost)');
             }
             
-            showStatus('Please click the "Connect Device" button to select your device', 'info');
-            console.log('System initialization completed, waiting for user operation');
+            showStatus('Please click "Connect Device" button to select your device', 'info');
+            console.log('System initialization complete, waiting for user operation');
             
             initDB();
         }
@@ -783,7 +783,7 @@
                 }
                 
                 updateConnectionStatus('connecting', 'Connecting...');
-                showStatus('Requesting device permissions...', 'info');
+                showStatus('Requesting device permission...', 'info');
                 
                 // Directly request device
                 navigator.serial.requestPort()
@@ -918,7 +918,7 @@
             const request = indexedDB.open(dbName, dbVersion);
             
             request.onerror = function(event) {
-                showStatus("Unable to open database: " + event.target.errorCode, 'error');
+                showStatus("Cannot open database: " + event.target.errorCode, 'error');
             };
             
             request.onsuccess = function(event) {
@@ -955,7 +955,7 @@
             };
             
             request.onerror = function() {
-                showStatus('Error: Unable to load user data', 'error');
+                showStatus('Error: Cannot load user data', 'error');
             };
         }
         
@@ -1045,7 +1045,7 @@
             }
             
             if (!name) {
-                showStatus('Error: Please enter a user name', 'error');
+                showStatus('Error: Please enter user name', 'error');
                 return;
             }
             
@@ -1074,12 +1074,12 @@
                 };
                 
                 addRequest.onerror = function() {
-                    showStatus('Error: Unable to add user', 'error');
+                    showStatus('Error: Cannot add user', 'error');
                 };
             };
             
             checkRequest.onerror = function() {
-                showStatus('Error: Unable to check if ID exists', 'error');
+                showStatus('Error: Cannot check if ID exists', 'error');
             };
         }
         
@@ -1101,7 +1101,7 @@
             };
             
             request.onerror = function() {
-                showStatus('Error: Unable to load user data', 'error');
+                showStatus('Error: Cannot load user data', 'error');
             };
         }
 
@@ -1119,7 +1119,7 @@
             };
             
             request.onerror = function() {
-                showStatus('Error: Unable to update user information', 'error');
+                showStatus('Error: Cannot update user information', 'error');
             };
         }
 
@@ -1156,7 +1156,7 @@
             }
             
             if (!name) {
-                showStatus('Error: Please enter a user name', 'error');
+                showStatus('Error: Please enter user name', 'error');
                 return;
             }
             alert(id+name);
@@ -1178,7 +1178,7 @@
             };
             
             request.onerror = function() {
-                showStatus('Error: Unable to delete user', 'error');
+                showStatus('Error: Cannot delete user', 'error');
             };
         }
         
@@ -1246,7 +1246,7 @@
         
         // Connect to port
         function connectToPort(port) {
-            console.log('Starting port configuration and connection...');
+            console.log('Starting to configure and connect to port...');
             
             // Get configuration parameters
             const baudRate = "57600";
@@ -1290,7 +1290,7 @@
             }
             
             isReading = true;
-            console.log('Starting data read loop');
+            console.log('Starting data reading loop');
             var strs = "";
             const readLoop = () => {
                 if (!isReading || !port.readable) return;
@@ -1299,7 +1299,7 @@
                 
                 reader.read().then(({ value, done }) => {
                     if (done) {
-                        console.log('Read completed (done)');
+                        console.log('Reading complete (done)');
                         reader.releaseLock();
                         return;
                     }
@@ -1373,7 +1373,7 @@
                         readLoop();
                     }
                 }).catch(error => {
-                    console.log(`Read error: ${error.message}`);
+                    console.log(`Reading error: ${error.message}`);
                     reader.releaseLock();
                     
                     // If still connected, continue reading
@@ -1392,7 +1392,7 @@
             
             // Check length
             if (cleanData.length < 6) {
-                console.log(`Insufficient data length: ${cleanData}`);
+                console.log(`Data length insufficient: ${cleanData}`);
                 return null;
             }
             
@@ -1428,7 +1428,7 @@
                 return null;
             }
             
-            // Search from the last record forward
+            // Search from last record forward
             for (let i = dataList.length - 1; i >= 0; i--) {
                 if (dataList[i].id !== null && dataList[i].id === id) {
                     return dataList[i];
