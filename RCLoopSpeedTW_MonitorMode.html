@@ -551,6 +551,7 @@
     <div class="container">
         <header>
             <h1>🔵 RC Loops Speed</h1>
+            <h3>Monitor Mode</h3>
         </header>
         
         <div class="card">
@@ -916,17 +917,17 @@
                     
                     // 建立索引
                     objectStore.createIndex('name', 'name', { unique: false });
-                    objectStore.createIndex('id', 'id', { unique: true });                  
-                    
+                    objectStore.createIndex('id', 'id', { unique: true });
                     showStatus("資料庫已建立/升級", 'success');
-                }       
+                   
+                }   
                 if(!db.objectStoreNames.contains(storeIdHex)){
                     const rc4Store = db.createObjectStore(storeIdHex, { keyPath: 'id', autoIncrement: true });                    
                     // 建立索引
                     rc4Store.createIndex('hex', 'hex', { unique: false });
                     rc4Store.createIndex('id', 'id', { unique: true });
-                    showStatus("資料庫已建立/升級", 'success');
-                }
+                    
+                }           
             };
         }
         //載入所有RC4Hex
@@ -1327,6 +1328,7 @@
             if(rc4count>2000){
                  addRc4idDB(rc4ids);
                 console.log(rc4ids);
+                alert("新增完成!");
             }
         }
          // 新增RC4 應答器
@@ -1388,6 +1390,7 @@
                                  //console.log(`接收到原始資料: ${d[0]}`);
                                 if(d[0].startsWith("FC0A")){
                                     if(rc4AddMode){ //rc4 新增模式
+                                        //console.log(rc4count);
                                         rc4rxs.push({
                                         id:d[0]
                                         });
@@ -1439,30 +1442,30 @@
                                     
                                 }else{
                                     var ot=d[0].match(/.{1,2}/g).map(byte => parseInt(byte, 16))
-                                    num = decodeRC3Telegram(ot);                                 
-                                    if(JSON.stringify(ot) === JSON.stringify(encodeTransponderFull(num, 510, 0))||JSON.stringify(ot) === JSON.stringify(encodeTransponderFull(num, 0, 0))){
-                                        let item = tmpdatalist.find(item => item.id === num);
-                                        if (item) {
-                                            timeDiff=(parseInt(d[1], 16)-item.time)/1000;
-                                            item.time = parseInt(d[1], 16); // 修改time
+                                    num = decodeRC3Telegram(ot);   
+                                     let item = tmpdatalist.find(item => item.id === num);
+                                    if (item) {
+                                        timeDiff=(parseInt(d[1], 16)-item.time)/1000;
+                                        item.time = parseInt(d[1], 16); // 修改time
                                             
-                                            if(timeDiff>1){
-                                                playBeep();
-                                                console.log(timeDiff);
-                                            }else{
-                                                continue;
-                                            }
+                                        if(timeDiff>1){
+                                            playBeep();
+                                            console.log(timeDiff);
+                                        }else{
+                                            continue;
+                                        }
+                                        
                                             
-                                            
-                                        } else {
+                                    }else  if(JSON.stringify(ot) === JSON.stringify(encodeTransponderFull(num, 510, 0))||JSON.stringify(ot) === JSON.stringify(encodeTransponderFull(num, 0, 0))){
+                                       
                                             //新增
                                             tmpdatalist.push({id:num,time:parseInt(d[1], 16)});
                                             playBeep();
                                             console.log("新增成功");
-                                        }
+                                     
                                         //console.log(tmpdatalist);
                                     }else{
-                                    continue;
+                                        continue;
                                     }      
                                 }
                                
